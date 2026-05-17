@@ -10,11 +10,10 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --g:#00ff88;--o:#ffaa00;--r:#ff3d5a;--a:#00d4ff;
+  --g:#00ff88;--o:#ffaa00;--r:#ff3d5a;--a:#00d4ff;--p:#bf5fff;
   --bg:#060a0b;--card:#0e1416;--b:#182022;--t:#e8f0f2;--m:#4a6068;
 }
 html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-serif;height:100%;overflow:hidden;user-select:none}
-
 .screen{display:none;flex-direction:column;height:100vh}
 .screen.on{display:flex}
 
@@ -37,78 +36,90 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
 /* DRIVE */
 #s1{background:var(--bg)}
 .topbar{display:flex;justify-content:space-between;align-items:center;
-        padding:12px 18px 8px;background:var(--card);border-bottom:1px solid var(--b)}
-.tb-l{font-size:11px;color:var(--m);max-width:65%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tb-r{display:flex;gap:8px;align-items:center;font-size:11px;color:var(--m)}
-.gdot{width:8px;height:8px;border-radius:50%;background:var(--m);transition:background .3s}
+        padding:10px 16px 8px;background:var(--card);border-bottom:1px solid var(--b)}
+.tb-l{font-size:11px;color:var(--m);max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-r{display:flex;gap:6px;align-items:center;font-size:10px;color:var(--m)}
+.gdot{width:8px;height:8px;border-radius:50%;background:var(--m);transition:background .3s;flex-shrink:0}
 .gdot.on{background:var(--g);box-shadow:0 0 6px var(--g)}
+.osm-dot{width:8px;height:8px;border-radius:50%;background:var(--m);transition:background .3s;flex-shrink:0}
+.osm-dot.on{background:var(--a);box-shadow:0 0 6px var(--a)}
 
-.hero{padding:20px 20px 14px;text-align:center;background:var(--card);border-bottom:1px solid var(--b)}
+.hero{padding:18px 20px 12px;text-align:center;background:var(--card);border-bottom:1px solid var(--b)}
 .hlbl{font-size:10px;text-transform:uppercase;letter-spacing:2.5px;color:var(--m);margin-bottom:4px}
-.hspd{font-size:96px;font-weight:700;line-height:1;letter-spacing:-5px;transition:color .4s}
-.hunit{font-size:20px;color:var(--m);margin-top:-2px}
-.hstatus{font-size:14px;font-weight:500;margin-top:8px;transition:color .4s}
+.hspd{font-size:88px;font-weight:700;line-height:1;letter-spacing:-5px;transition:color .4s}
+.hunit{font-size:18px;color:var(--m);margin-top:-2px}
+.hstatus{font-size:13px;font-weight:500;margin-top:6px;transition:color .4s}
 
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--b);
       border-top:1px solid var(--b);border-bottom:1px solid var(--b)}
-.cell{background:var(--card);padding:12px 16px}
+.cell{background:var(--card);padding:11px 14px}
 .clbl{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--m);margin-bottom:3px}
-.cval{font-size:24px;font-weight:700;letter-spacing:-.5px;transition:color .3s}
+.cval{font-size:22px;font-weight:700;letter-spacing:-.5px;transition:color .3s}
 .cunit{font-size:10px;color:var(--m);margin-top:1px}
 
-/* MELDE BUTTONS */
-.melde-section{padding:12px 16px;background:var(--card);border-bottom:1px solid var(--b)}
-.melde-title{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--m);margin-bottom:10px}
-.melde-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.btn-gruen{padding:16px;border:none;border-radius:14px;font-size:16px;font-weight:700;
-           cursor:pointer;background:rgba(0,255,136,.15);color:var(--g);
-           border:2px solid rgba(0,255,136,.3);transition:all .15s;letter-spacing:.5px}
-.btn-rot{padding:16px;border:none;border-radius:14px;font-size:16px;font-weight:700;
-         cursor:pointer;background:rgba(255,61,90,.15);color:var(--r);
-         border:2px solid rgba(255,61,90,.3);transition:all .15s;letter-spacing:.5px}
-.btn-gruen:active{background:rgba(0,255,136,.35);transform:scale(.96)}
-.btn-rot:active{background:rgba(255,61,90,.35);transform:scale(.96)}
-
-.melde-feedback{font-size:11px;color:var(--m);text-align:center;margin-top:8px;min-height:16px;transition:color .3s}
+/* MELDE */
+.melde-section{padding:10px 14px;background:var(--card);border-bottom:1px solid var(--b)}
+.melde-title{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--m);margin-bottom:8px}
+.melde-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn-gruen{padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;
+           cursor:pointer;background:rgba(0,255,136,.12);color:var(--g);
+           border:2px solid rgba(0,255,136,.25);transition:all .15s}
+.btn-rot{padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;
+         cursor:pointer;background:rgba(255,61,90,.12);color:var(--r);
+         border:2px solid rgba(255,61,90,.25);transition:all .15s}
+.btn-gruen:active{background:rgba(0,255,136,.3);transform:scale(.96)}
+.btn-rot:active{background:rgba(255,61,90,.3);transform:scale(.96)}
+.btn-neu{width:100%;margin-top:8px;padding:11px;border:none;border-radius:12px;font-size:13px;
+         font-weight:700;cursor:pointer;background:rgba(191,95,255,.1);color:var(--p);
+         border:2px solid rgba(191,95,255,.22);transition:all .15s}
+.btn-neu:active{background:rgba(191,95,255,.25);transform:scale(.96)}
+.melde-feedback{font-size:10px;color:var(--m);text-align:center;margin-top:6px;min-height:14px}
 
 /* LIST */
 .listWrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.listHead{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--m);padding:12px 18px 8px;
-          display:flex;justify-content:space-between;align-items:center}
-.community-badge{font-size:9px;padding:3px 8px;border-radius:10px;
-                 background:rgba(0,212,255,.1);color:var(--a);border:1px solid rgba(0,212,255,.2)}
-.row{display:flex;align-items:center;gap:12px;padding:10px 18px;border-bottom:1px solid var(--b)}
+.listHead{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--m);
+          padding:10px 16px 6px;display:flex;justify-content:space-between;align-items:center}
+.osm-badge{font-size:9px;padding:2px 7px;border-radius:8px;
+           background:rgba(0,212,255,.1);color:var(--a);border:1px solid rgba(0,212,255,.2)}
+.row{display:flex;align-items:center;gap:10px;padding:9px 16px;border-bottom:1px solid var(--b)}
 .row:last-child{border-bottom:none}
-.lCirc{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;
-       align-items:center;justify-content:center;font-size:13px;font-weight:700;
+.lCirc{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;
+       align-items:center;justify-content:center;font-size:12px;font-weight:700;
        border:2px solid var(--b);transition:all .4s}
 .lCirc.g{border-color:var(--g);background:rgba(0,255,136,.12);color:var(--g);box-shadow:0 0 8px rgba(0,255,136,.2)}
 .lCirc.o{border-color:var(--o);background:rgba(255,170,0,.12);color:var(--o)}
 .lCirc.r{border-color:var(--r);background:rgba(255,61,90,.12);color:var(--r)}
 .lInfo{flex:1;min-width:0}
-.lName{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lMeta{font-size:11px;color:var(--m);margin-top:2px}
-.lBadge{font-size:9px;padding:2px 6px;border-radius:6px;background:rgba(0,212,255,.1);
-        color:var(--a);border:1px solid rgba(0,212,255,.15);white-space:nowrap}
-.lTime{font-size:17px;font-weight:700;text-align:right;white-space:nowrap;transition:color .3s}
+.lName{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lMeta{font-size:10px;color:var(--m);margin-top:1px}
+.lTime{font-size:16px;font-weight:700;text-align:right;white-space:nowrap;transition:color .3s;min-width:70px}
 
 .btm{display:flex;justify-content:space-between;align-items:center;
-     padding:10px 18px;background:var(--card);border-top:1px solid var(--b)}
-.btm-l .label{font-size:10px;color:var(--m);text-transform:uppercase;letter-spacing:1px}
-.btm-l .val{font-size:20px;font-weight:700;color:var(--a)}
-.pill{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:600;transition:all .3s}
+     padding:9px 16px;background:var(--card);border-top:1px solid var(--b)}
+.btm-l .label{font-size:9px;color:var(--m);text-transform:uppercase;letter-spacing:1px}
+.btm-l .val{font-size:18px;font-weight:700;color:var(--a)}
+.pill{padding:4px 10px;border-radius:8px;font-size:11px;font-weight:600;transition:all .3s}
 .ok{background:rgba(0,255,136,.1);color:var(--g)}
 .up{background:rgba(0,212,255,.1);color:var(--a)}
 .dn{background:rgba(255,61,90,.1);color:var(--r)}
 
+/* Loading */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;
+         padding:30px;color:var(--m);font-size:12px;gap:10px}
+.spinner{width:24px;height:24px;border:2px solid var(--b);border-top-color:var(--a);
+         border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
 /* Toast */
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
-       padding:10px 20px;border-radius:12px;font-size:13px;font-weight:600;
-       opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap}
+.toast{position:fixed;bottom:75px;left:50%;transform:translateX(-50%) translateY(20px);
+       padding:9px 18px;border-radius:12px;font-size:12px;font-weight:600;
+       opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap;max-width:90vw;
+       overflow:hidden;text-overflow:ellipsis}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.gruen{background:rgba(0,255,136,.2);color:var(--g);border:1px solid rgba(0,255,136,.3)}
 .toast.rot{background:rgba(255,61,90,.2);color:var(--r);border:1px solid rgba(255,61,90,.3)}
 .toast.info{background:rgba(0,212,255,.2);color:var(--a);border:1px solid rgba(0,212,255,.3)}
+.toast.neu{background:rgba(191,95,255,.2);color:var(--p);border:1px solid rgba(191,95,255,.3)}
 
 .listWrap::-webkit-scrollbar{width:3px}
 .listWrap::-webkit-scrollbar-thumb{background:var(--b);border-radius:2px}
@@ -122,11 +133,11 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
 <div class="screen on" id="s0">
   <div class="icon">🚦</div>
   <div class="t1">Grüne Welle HH</div>
-  <div class="t2">Community-gestützte Ampeldaten.<br>Melde Phasen — hilf allen Fahrern.</div>
+  <div class="t2">Echte Ampeln aus OpenStreetMap.<br>Community meldet Phasen — App lernt mit.</div>
   <button class="btnS" onclick="boot()">▶ GPS starten</button>
   <div class="chips">
     <span class="chip">📍 Echtes GPS</span>
-    <span class="chip">👥 Community</span>
+    <span class="chip">🗺️ OpenStreetMap</span>
     <span class="chip">🧠 Lernend</span>
   </div>
 </div>
@@ -136,6 +147,8 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
   <div class="topbar">
     <div class="tb-l" id="locTxt">Warte auf GPS…</div>
     <div class="tb-r">
+      <span id="osmCount" style="font-size:10px;color:var(--m)"></span>
+      <div class="osm-dot" id="osmDot"></div>
       <span id="accTxt"></span>
       <div class="gdot" id="gdot"></div>
     </div>
@@ -145,7 +158,7 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
     <div class="hlbl">Empfohlene Geschwindigkeit</div>
     <div class="hspd" id="hspd" style="color:var(--g)">—</div>
     <div class="hunit">km/h</div>
-    <div class="hstatus" id="hstatus" style="color:var(--m)">GPS wird aktiviert…</div>
+    <div class="hstatus" id="hstatus" style="color:var(--m)">GPS + Ampeln werden geladen…</div>
   </div>
 
   <div class="grid">
@@ -165,28 +178,29 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
       <div class="cunit">Sekunden</div>
     </div>
     <div class="cell">
-      <div class="clbl">Datenpunkte</div>
+      <div class="clbl">Meldungen</div>
       <div class="cval" id="dataPoints" style="color:var(--a)">0</div>
-      <div class="cunit">Community-Meldungen</div>
+      <div class="cunit">Community</div>
     </div>
   </div>
 
-  <!-- MELDE BUTTONS -->
+  <!-- MELDE -->
   <div class="melde-section">
-    <div class="melde-title">🚦 Aktuelle Ampel melden</div>
+    <div class="melde-title">🚦 Ampel melden</div>
     <div class="melde-btns">
       <button class="btn-gruen" onclick="melde('green')">🟢 GRÜN</button>
       <button class="btn-rot"   onclick="melde('red')">🔴 ROT</button>
     </div>
+    <button class="btn-neu" onclick="neueAmpel()">📍 Neue Ampel hier einzeichnen</button>
     <div class="melde-feedback" id="meldeFeedback">Tippe wenn du an einer Ampel bist</div>
   </div>
 
   <div class="listWrap">
     <div class="listHead">
       <span>Ampeln in der Nähe</span>
-      <span class="community-badge" id="communityCount">0 Meldungen</span>
+      <span class="osm-badge" id="communityCount">lädt…</span>
     </div>
-    <div id="ampList"></div>
+    <div id="ampList"><div class="loading"><div class="spinner"></div><span>Ampeln werden geladen…</span></div></div>
   </div>
 
   <div class="btm">
@@ -200,81 +214,152 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
 
 <script>
 // ═══════════════════════════════════════════
-// SUPABASE SETUP
+// SUPABASE
 // ═══════════════════════════════════════════
 const SUPA_URL = 'https://iryvlhiyhwgqujzmpjxn.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlyeXZsaGl5aHdncXVqem1wanhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwNDY0MzksImV4cCI6MjA5NDYyMjQzOX0.MaZK2Z9cRQbfcE-QWlUl5q7QaGtoiMQpx-_POyW-MKo';
 const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
 
 // ═══════════════════════════════════════════
-// AMPEL BASISDATEN (Hamburg)
-// ═══════════════════════════════════════════
-const BASE_DB = [
-  {id:1,  lat:53.54963,lng:9.96818,name:"Reeperbahn / Nobistor",       z:60, p:0 },
-  {id:2,  lat:53.55082,lng:9.97178,name:"Reeperbahn / Davidstraße",    z:60, p:10},
-  {id:3,  lat:53.55215,lng:9.97618,name:"Reeperbahn / Peterstraße",    z:60, p:20},
-  {id:4,  lat:53.54980,lng:9.98160,name:"Ludwig-Erhard-Str.",          z:70, p:5 },
-  {id:5,  lat:53.55020,lng:9.98680,name:"Willy-Brandt-Str. / Mitte",  z:70, p:18},
-  {id:6,  lat:53.55080,lng:9.99200,name:"Rödingsmarkt",               z:65, p:30},
-  {id:7,  lat:53.55250,lng:9.99420,name:"Jungfernstieg / West",       z:60, p:40},
-  {id:8,  lat:53.55300,lng:9.99880,name:"Jungfernstieg / Mitte",      z:60, p:50},
-  {id:9,  lat:53.55350,lng:10.0022,name:"Mönckebergstraße",           z:55, p:8 },
-  {id:10, lat:53.55180,lng:10.0058,name:"Hauptbahnhof / West",        z:75, p:22},
-  {id:11, lat:53.54990,lng:9.94560,name:"Max-Brauer-Allee / Süd",     z:60, p:12},
-  {id:12, lat:53.55320,lng:9.94780,name:"Max-Brauer-Allee / Nord",    z:60, p:28},
-  {id:13, lat:53.55670,lng:9.95120,name:"Stresemannstraße / Mitte",   z:65, p:42},
-  {id:14, lat:53.55480,lng:9.93820,name:"Holstenstraße / Mitte",      z:60, p:35},
-  {id:15, lat:53.56120,lng:9.90210,name:"Elbchaussee / Teufelsbrück", z:80, p:15},
-  {id:16, lat:53.55890,lng:9.91850,name:"Elbchaussee / Nienstedten",  z:80, p:35},
-  {id:17, lat:53.55580,lng:9.93420,name:"Elbchaussee / Othmarschen",  z:75, p:55},
-  {id:18, lat:53.57120,lng:10.0782,name:"Wandsbeker Marktstraße",     z:65, p:18},
-  {id:19, lat:53.56340,lng:10.0512,name:"Hammer Straße / Mitte",      z:60, p:38},
-  {id:20, lat:53.58560,lng:10.0312,name:"Fuhlsbüttler Str. / Süd",    z:70, p:48},
-  {id:21, lat:53.58920,lng:10.0418,name:"Barmbeker Straße / Mitte",   z:65, p:5 },
-  {id:22, lat:53.46200,lng:9.99230,name:"Harburger Rathausplatz",     z:75, p:25},
-  {id:23, lat:53.47180,lng:9.98640,name:"Neue Straße Harburg",        z:60, p:45},
-  {id:24, lat:53.48840,lng:10.2118,name:"Bergedorfer Straße / Mitte", z:70, p:30},
-];
-
-// Community-Daten aus Supabase (wird geladen)
-let communityData = {}; // { ampel_id: { gruen_count, rot_count, avg_gruen_dauer, avg_rot_dauer, zyklus } }
-let totalMeldungen = 0;
-
-// ═══════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════
 let lat=null, lng=null, spd=0;
-let gpsOk=false;
 let T=0;
+let OSM_DB = [];       // Echte Ampeln aus OpenStreetMap
+let communityData = {};
+let totalMeldungen = 0;
 
 // ═══════════════════════════════════════════
-// SUPABASE: Tabelle erstellen (beim ersten Mal)
+// OPENSTREETMAP: Echte Ampeln laden
+// Overpass API — alle Ampeln in 1.5km Umkreis
+// ═══════════════════════════════════════════
+async function ladeOSMAmpeln(myLat, myLng) {
+  try {
+    const r = 0.018; // ~1.5km in Grad
+    const bbox = `${myLat-r},${myLng-r},${myLat+r},${myLng+r}`;
+    const query = `[out:json][timeout:10];node[highway=traffic_signals](${bbox});out body;`;
+    const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    OSM_DB = (data.elements || []).map((n, i) => ({
+      id:   90000 + i,
+      lat:  n.lat,
+      lng:  n.lon,
+      name: n.tags?.name || n.tags?.['addr:street'] || `Ampel ${i+1}`,
+      z:    60,  // Standard-Zyklus, wird durch Community verfeinert
+      p:    (i * 7) % 60,  // Versatz damit nicht alle gleich schalten
+      osm:  true
+    }));
+
+    document.getElementById('osmDot').classList.add('on');
+    document.getElementById('osmCount').textContent = OSM_DB.length + ' OSM';
+    document.getElementById('communityCount').textContent = OSM_DB.length + ' Ampeln';
+    showToast(`🗺️ ${OSM_DB.length} echte Ampeln geladen!`, 'info');
+
+  } catch(e) {
+    console.log('OSM Fehler:', e);
+    // Fallback auf Basisdaten
+    OSM_DB = FALLBACK_DB;
+    document.getElementById('communityCount').textContent = OSM_DB.length + ' Ampeln (offline)';
+  }
+}
+
+// ═══════════════════════════════════════════
+// FALLBACK (wenn OSM nicht erreichbar)
+// ═══════════════════════════════════════════
+const FALLBACK_DB = [
+  {id:1,  lat:53.54963,lng:9.96818,name:"Reeperbahn / Nobistor",      z:60,p:0  },
+  {id:2,  lat:53.55082,lng:9.97178,name:"Reeperbahn / Davidstraße",   z:60,p:10 },
+  {id:3,  lat:53.55215,lng:9.97618,name:"Reeperbahn / Peterstraße",   z:60,p:20 },
+  {id:4,  lat:53.54980,lng:9.98160,name:"Ludwig-Erhard-Str.",         z:70,p:5  },
+  {id:5,  lat:53.55020,lng:9.98680,name:"Willy-Brandt-Str. / Mitte", z:70,p:18 },
+  {id:6,  lat:53.55080,lng:9.99200,name:"Rödingsmarkt",              z:65,p:30 },
+  {id:7,  lat:53.55250,lng:9.99420,name:"Jungfernstieg / West",      z:60,p:40 },
+  {id:8,  lat:53.55300,lng:9.99880,name:"Jungfernstieg / Mitte",     z:60,p:50 },
+  {id:9,  lat:53.55350,lng:10.0022,name:"Mönckebergstraße",          z:55,p:8  },
+  {id:10, lat:53.55180,lng:10.0058,name:"Hauptbahnhof / West",       z:75,p:22 },
+  {id:11, lat:53.54990,lng:9.94560,name:"Max-Brauer-Allee / Süd",    z:60,p:12 },
+  {id:12, lat:53.55320,lng:9.94780,name:"Max-Brauer-Allee / Nord",   z:60,p:28 },
+  {id:13, lat:53.55670,lng:9.95120,name:"Stresemannstraße / Mitte",  z:65,p:42 },
+  {id:14, lat:53.55480,lng:9.93820,name:"Holstenstraße / Mitte",     z:60,p:35 },
+  {id:15, lat:53.56120,lng:9.90210,name:"Elbchaussee / Teufelsbrück",z:80,p:15 },
+  {id:16, lat:53.55890,lng:9.91850,name:"Elbchaussee / Nienstedten", z:80,p:35 },
+  {id:17, lat:53.55580,lng:9.93420,name:"Elbchaussee / Othmarschen", z:75,p:55 },
+  {id:18, lat:53.57120,lng:10.0782,name:"Wandsbeker Marktstraße",    z:65,p:18 },
+  {id:19, lat:53.56340,lng:10.0512,name:"Hammer Straße / Mitte",     z:60,p:38 },
+  {id:20, lat:53.58560,lng:10.0312,name:"Fuhlsbüttler Str. / Süd",   z:70,p:48 },
+  {id:21, lat:53.58920,lng:10.0418,name:"Barmbeker Straße / Mitte",  z:65,p:5  },
+  {id:22, lat:53.46200,lng:9.99230,name:"Harburger Rathausplatz",    z:75,p:25 },
+  {id:23, lat:53.47180,lng:9.98640,name:"Neue Straße Harburg",       z:60,p:45 },
+  {id:24, lat:53.48840,lng:10.2118,name:"Bergedorfer Straße / Mitte",z:70,p:30 },
+];
+
+// ═══════════════════════════════════════════
+// SUPABASE: Community-Daten laden
 // ═══════════════════════════════════════════
 async function initDB() {
-  // Prüfen ob Daten vorhanden
-  const { data, error } = await sb
+  const { data } = await sb
     .from('ampel_meldungen')
-    .select('ampel_id, phase, created_at')
-    .order('created_at', { ascending: false })
-    .limit(500);
+    .select('ampel_id, phase')
+    .limit(1000);
 
-  if (error) {
-    console.log('DB noch nicht bereit oder Fehler:', error.message);
-    return;
-  }
-
-  // Community-Daten auswerten
   const stats = {};
-  (data || []).forEach(m => {
-    if (!stats[m.ampel_id]) stats[m.ampel_id] = { gruen:0, rot:0 };
-    if (m.phase === 'green') stats[m.ampel_id].gruen++;
+  (data||[]).forEach(m => {
+    if (!stats[m.ampel_id]) stats[m.ampel_id] = {gruen:0,rot:0};
+    if (m.phase==='green') stats[m.ampel_id].gruen++;
     else stats[m.ampel_id].rot++;
   });
-
   communityData = stats;
-  totalMeldungen = (data || []).length;
+  totalMeldungen = (data||[]).length;
   document.getElementById('dataPoints').textContent = totalMeldungen;
-  document.getElementById('communityCount').textContent = totalMeldungen + ' Meldungen';
+}
+
+// ═══════════════════════════════════════════
+// GPS STARTEN
+// ═══════════════════════════════════════════
+function boot() {
+  show('s1');
+  initDB();
+  if (!navigator.geolocation) {
+    document.getElementById('locTxt').textContent = 'Kein GPS';
+    OSM_DB = FALLBACK_DB;
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(pos => {
+    onPos(pos);
+    // OSM Ampeln beim ersten Fix laden
+    ladeOSMAmpeln(pos.coords.latitude, pos.coords.longitude);
+  }, onErr, {enableHighAccuracy:true, timeout:15000});
+
+  navigator.geolocation.watchPosition(onPos, onErr,
+    {enableHighAccuracy:true, maximumAge:1500, timeout:10000});
+}
+
+let osmGeladen = false;
+let letzterOSMLat = null;
+
+function onPos(p) {
+  lat = p.coords.latitude;
+  lng = p.coords.longitude;
+  spd = p.coords.speed!=null ? Math.round(p.coords.speed*3.6) : spd;
+
+  document.getElementById('gdot').classList.add('on');
+  document.getElementById('accTxt').textContent = '±'+Math.round(p.coords.accuracy)+'m';
+  document.getElementById('locTxt').textContent = lat.toFixed(5)+' '+lng.toFixed(5);
+
+  // OSM neu laden wenn >500m bewegt
+  if (!osmGeladen || (letzterOSMLat && dist(lat,lng,letzterOSMLat.lat,letzterOSMLat.lng) > 500)) {
+    osmGeladen = true;
+    letzterOSMLat = {lat, lng};
+    ladeOSMAmpeln(lat, lng);
+  }
+}
+
+function onErr() {
+  document.getElementById('locTxt').textContent = 'GPS-Fehler';
+  if (!OSM_DB.length) OSM_DB = FALLBACK_DB;
 }
 
 // ═══════════════════════════════════════════
@@ -282,84 +367,75 @@ async function initDB() {
 // ═══════════════════════════════════════════
 async function melde(phase) {
   if (!lat) { showToast('Erst GPS aktivieren!', 'info'); return; }
-
-  // Nächste Ampel finden
-  const nearest = BASE_DB
-    .map(a => ({...a, d: dist(lat,lng,a.lat,a.lng)}))
-    .sort((a,b) => a.d-b.d)[0];
-
-  if (!nearest || nearest.d > 150) {
-    showToast('Zu weit von einer Ampel entfernt (>150m)', 'info');
-    return;
+  const db = OSM_DB.length ? OSM_DB : FALLBACK_DB;
+  const nearest = db.map(a=>({...a,d:dist(lat,lng,a.lat,a.lng)})).sort((a,b)=>a.d-b.d)[0];
+  if (!nearest || nearest.d > 80) {
+    showToast('Keine Ampel in 80m Umkreis', 'info'); return;
   }
-
   const now = new Date();
-  const sekunde = now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds();
-
-  const { error } = await sb.from('ampel_meldungen').insert({
-    ampel_id:   nearest.id,
-    ampel_name: nearest.name,
-    phase:      phase,
-    lat:        lat,
-    lng:        lng,
-    tageszeit:  sekunde,
+  await sb.from('ampel_meldungen').insert({
+    ampel_id: nearest.id, ampel_name: nearest.name, phase,
+    lat, lng, tageszeit: now.getHours()*3600+now.getMinutes()*60+now.getSeconds(),
     created_at: now.toISOString()
   });
-
-  if (error) {
-    // Tabelle existiert noch nicht → SQL-Hinweis
-    showToast('DB einrichten — siehe unten', 'info');
-    document.getElementById('meldeFeedback').textContent =
-      '⚠️ Tabelle fehlt noch — SQL Editor öffnen';
-    return;
-  }
-
-  // Lokal updaten
-  if (!communityData[nearest.id]) communityData[nearest.id] = {gruen:0,rot:0};
+  if (!communityData[nearest.id]) communityData[nearest.id]={gruen:0,rot:0};
   if (phase==='green') communityData[nearest.id].gruen++;
   else communityData[nearest.id].rot++;
   totalMeldungen++;
-
   document.getElementById('dataPoints').textContent = totalMeldungen;
-  document.getElementById('communityCount').textContent = totalMeldungen + ' Meldungen';
-
-  const emoji = phase==='green' ? '🟢' : '🔴';
-  const txt   = phase==='green' ? 'grün' : 'rot';
-  showToast(`${emoji} ${nearest.name} als ${txt} gemeldet!`, phase==='green'?'gruen':'rot');
-  document.getElementById('meldeFeedback').textContent =
-    `✓ ${nearest.name} — ${txt} gemeldet (${Math.round(nearest.d)}m)`;
+  const txt = phase==='green'?'grün':'rot';
+  showToast(`${phase==='green'?'🟢':'🔴'} ${nearest.name} — ${txt} (${Math.round(nearest.d)}m)`, phase==='green'?'gruen':'rot');
+  document.getElementById('meldeFeedback').textContent = `✓ ${nearest.name} als ${txt} gemeldet`;
 }
 
 // ═══════════════════════════════════════════
-// PHASE BERECHNEN (mit Community-Daten)
+// NEUE AMPEL EINZEICHNEN
+// ═══════════════════════════════════════════
+async function neueAmpel() {
+  if (!lat) { showToast('Erst GPS aktivieren!', 'info'); return; }
+  const db = OSM_DB.length ? OSM_DB : FALLBACK_DB;
+  const zuNah = db.find(a => dist(lat,lng,a.lat,a.lng) < 25);
+  if (zuNah) {
+    showToast('Ampel bereits bekannt: ' + zuNah.name, 'info'); return;
+  }
+
+  // Straßenname holen
+  let name = 'Neue Ampel';
+  try {
+    const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
+    const d = await r.json();
+    const a = d.address||{};
+    name = (a.road||a.street||'Unbekannte Str.') + (a.house_number?' '+a.house_number:'');
+  } catch(e){}
+
+  // Lokal hinzufügen
+  const newId = 80000 + OSM_DB.length;
+  OSM_DB.push({id:newId, lat, lng, name, z:60, p:Math.round(Math.random()*60), neu:true});
+
+  // In Supabase speichern
+  await sb.from('neue_ampeln').insert({lat, lng, name, created_at: new Date().toISOString()}).catch(()=>{});
+
+  showToast('📍 Neue Ampel eingetragen: ' + name, 'neu');
+  document.getElementById('meldeFeedback').textContent = '📍 ' + name + ' hinzugefügt';
+  document.getElementById('communityCount').textContent = OSM_DB.length + ' Ampeln';
+}
+
+// ═══════════════════════════════════════════
+// PHASE BERECHNEN
 // ═══════════════════════════════════════════
 function getPhase(amp) {
   const cd = communityData[amp.id];
-
-  // Mit Community-Daten: echtes Verhältnis
-  if (cd && (cd.gruen + cd.rot) >= 5) {
-    const total = cd.gruen + cd.rot;
-    const gruenAnteil = cd.gruen / total;
-    const z = amp.z;
-    const gruenDauer = Math.round(z * gruenAnteil);
-    const t = (T + amp.p) % z;
-    if (t < gruenDauer) return {c:'g', rem: Math.ceil(gruenDauer-t), toGreen:0, community:true};
-    return {c:'r', rem: Math.ceil(z-t), toGreen: Math.ceil(z-t), community:true};
+  if (cd && (cd.gruen+cd.rot)>=5) {
+    const gruenAnteil = cd.gruen/(cd.gruen+cd.rot);
+    const gDauer = Math.round(amp.z * gruenAnteil);
+    const t = (T+amp.p) % amp.z;
+    if (t<gDauer) return {c:'g', rem:Math.ceil(gDauer-t), toGreen:0, community:true};
+    return {c:'r', rem:Math.ceil(amp.z-t), toGreen:Math.ceil(amp.z-t), community:true};
   }
-
-  // Fallback: Schätzung
-  const t = (T + amp.p) % amp.z;
-  const gEnd = amp.z * 0.60;
-  const oEnd = amp.z * 0.68;
-  if (t < gEnd)  return {c:'g', rem:Math.ceil(gEnd-t),  toGreen:0,          community:false};
-  if (t < oEnd)  return {c:'o', rem:Math.ceil(oEnd-t),  toGreen:Math.ceil(amp.z-t), community:false};
-  return               {c:'r', rem:Math.ceil(amp.z-t), toGreen:Math.ceil(amp.z-t), community:false};
-}
-
-function meldungenFuer(id) {
-  const cd = communityData[id];
-  if (!cd) return 0;
-  return cd.gruen + cd.rot;
+  const t=(T+amp.p)%amp.z, gE=amp.z*.60, oE=amp.z*.68;
+  if(t<gE)  return {c:'g',rem:Math.ceil(gE-t), toGreen:0,           community:false};
+  if(t<oE)  return {c:'o',rem:Math.ceil(oE-t), toGreen:Math.ceil(amp.z-t), community:false};
+  return          {c:'r',rem:Math.ceil(amp.z-t),toGreen:Math.ceil(amp.z-t), community:false};
 }
 
 // ═══════════════════════════════════════════
@@ -367,52 +443,24 @@ function meldungenFuer(id) {
 // ═══════════════════════════════════════════
 function bestSpeed(nearby) {
   const ahead = nearby.filter(a=>a.d>8);
-  if (!ahead.length) return {v:50,hit:0,tot:0};
+  if(!ahead.length) return {v:50,hit:0,tot:0};
   let best={v:50,hit:-1};
-  for (let v=20;v<=60;v++) {
+  for(let v=20;v<=60;v++){
     let hit=0;
-    for (const a of ahead) {
-      const fahr = a.d/(v/3.6);
-      const ph = getPhase({...a, p: (a.p + Math.round(fahr)) % a.z});
-      if (ph.c==='g') hit++;
+    for(const a of ahead){
+      const fahr=a.d/(v/3.6);
+      const ph=getPhase({...a, p:(a.p+Math.round(fahr))%a.z});
+      if(ph.c==='g') hit++;
     }
-    if (hit>best.hit) best={v,hit};
+    if(hit>best.hit) best={v,hit};
   }
   return {v:best.v,hit:best.hit,tot:ahead.length};
 }
 
 // ═══════════════════════════════════════════
-// GPS
-// ═══════════════════════════════════════════
-function boot() {
-  show('s1');
-  initDB();
-  if (!navigator.geolocation) {
-    document.getElementById('locTxt').textContent='Kein GPS';
-    return;
-  }
-  navigator.geolocation.getCurrentPosition(onPos, onErr, {enableHighAccuracy:true,timeout:15000});
-  navigator.geolocation.watchPosition(onPos, onErr, {enableHighAccuracy:true,maximumAge:1500,timeout:10000});
-}
-
-function onPos(p) {
-  lat = p.coords.latitude;
-  lng = p.coords.longitude;
-  spd = p.coords.speed!=null ? Math.round(p.coords.speed*3.6) : spd;
-  gpsOk = true;
-  document.getElementById('gdot').classList.add('on');
-  document.getElementById('accTxt').textContent = '±'+Math.round(p.coords.accuracy)+'m';
-  document.getElementById('locTxt').textContent = lat.toFixed(5)+' '+lng.toFixed(5);
-}
-
-function onErr(e) {
-  document.getElementById('locTxt').textContent = 'GPS-Fehler';
-}
-
-// ═══════════════════════════════════════════
 // DISTANZ
 // ═══════════════════════════════════════════
-function dist(a,b,c,d) {
+function dist(a,b,c,d){
   const R=6371000,dl=(c-a)*Math.PI/180,dn=(d-b)*Math.PI/180;
   const x=Math.sin(dl/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dn/2)**2;
   return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
@@ -421,93 +469,82 @@ function dist(a,b,c,d) {
 // ═══════════════════════════════════════════
 // UI UPDATE
 // ═══════════════════════════════════════════
-function tick() {
+function tick(){
   T++;
-  if (!lat) return;
+  if(!lat) return;
+  const db = OSM_DB.length ? OSM_DB : FALLBACK_DB;
+  const nearby = db.map(a=>({...a,d:dist(lat,lng,a.lat,a.lng)}))
+    .filter(a=>a.d<1500).sort((a,b)=>a.d-b.d).slice(0,8);
 
-  const nearby = BASE_DB
-    .map(a=>({...a,d:dist(lat,lng,a.lat,a.lng)}))
-    .filter(a=>a.d<2000)
-    .sort((a,b)=>a.d-b.d)
-    .slice(0,7);
+  const {v:rec,hit,tot}=bestSpeed(nearby);
+  const pct=tot>0?Math.round(hit/tot*100):0;
+  const col=pct>=60?'var(--g)':pct>=30?'var(--o)':'var(--r)';
 
-  const {v:rec,hit,tot} = bestSpeed(nearby);
-  const pct = tot>0 ? Math.round(hit/tot*100) : 0;
-  const col = pct>=60?'var(--g)':pct>=30?'var(--o)':'var(--r)';
-
-  document.getElementById('hspd').textContent = rec;
-  document.getElementById('hspd').style.color = col;
-  document.getElementById('hstatus').textContent =
+  document.getElementById('hspd').textContent=rec;
+  document.getElementById('hspd').style.color=col;
+  document.getElementById('hstatus').textContent=
     pct>=60?'🟢 Grüne Welle — halte dieses Tempo':
-    pct>=30?'🟡 Anpassen für bessere Welle':
-            '🔴 Gestört — langsam rollen';
-  document.getElementById('hstatus').style.color = col;
+    pct>=30?'🟡 Anpassen für bessere Welle':'🔴 Gestört — langsam rollen';
+  document.getElementById('hstatus').style.color=col;
 
-  document.getElementById('mySpd').textContent  = spd;
-  document.getElementById('btmSpd').textContent = spd+' km/h';
+  document.getElementById('mySpd').textContent=spd;
+  document.getElementById('btmSpd').textContent=spd+' km/h';
 
-  const diff = spd-rec;
-  const pill = document.getElementById('pill');
+  const diff=spd-rec;
+  const pill=document.getElementById('pill');
   if(Math.abs(diff)<=5){pill.textContent='✓ Passt';pill.className='pill ok';}
   else if(diff<-5){pill.textContent='▲ Schneller';pill.className='pill up';}
   else{pill.textContent='▼ Langsamer';pill.className='pill dn';}
 
-  const next = nearby.find(a=>a.d>8);
-  if (next) {
-    const ph = getPhase(next);
-    document.getElementById('nDist').textContent  = Math.round(next.d);
-    document.getElementById('greenIn').textContent = ph.toGreen===0?'✓':ph.toGreen;
-    document.getElementById('greenIn').style.color =
-      ph.toGreen===0?'var(--g)':ph.toGreen<12?'var(--o)':'var(--r)';
+  const next=nearby.find(a=>a.d>8);
+  if(next){
+    const ph=getPhase(next);
+    document.getElementById('nDist').textContent=Math.round(next.d);
+    document.getElementById('greenIn').textContent=ph.toGreen===0?'✓':ph.toGreen;
+    document.getElementById('greenIn').style.color=ph.toGreen===0?'var(--g)':ph.toGreen<12?'var(--o)':'var(--r)';
   }
 
-  // Liste
-  const list = document.getElementById('ampList');
-  if (!nearby.length) {
-    list.innerHTML='<div style="padding:20px 18px;color:var(--m);font-size:13px;text-align:center">Keine Ampeln in 2km</div>';
+  const list=document.getElementById('ampList');
+  if(!nearby.length){
+    list.innerHTML='<div class="loading"><span>Keine Ampeln in 1.5km — OSM lädt…</span></div>';
     return;
   }
-  list.innerHTML = nearby.map(a=>{
-    const ph = getPhase(a);
-    const icon = ph.c==='g'?'✓':ph.c==='o'?'!':'✗';
-    const tTxt = ph.c==='g' ? ph.rem+'s grün' : 'grün in '+ph.toGreen+'s';
-    const tCol = ph.c==='g'?'var(--g)':ph.c==='o'?'var(--o)':'var(--r)';
-    const ankunft = rec>0?Math.round(a.d/(rec/3.6)):'?';
-    const meld = meldungenFuer(a.id);
-    const badge = meld>=5
-      ? `<span class="lBadge">📊 ${meld} Meldungen</span>`
-      : meld>0
-      ? `<span class="lBadge" style="color:var(--m);border-color:var(--b)">⏳ ${meld}/5</span>`
-      : '';
-    return `
-      <div class="row">
-        <div class="lCirc ${ph.c}">${icon}</div>
-        <div class="lInfo">
-          <div class="lName">${a.name}</div>
-          <div class="lMeta">${Math.round(a.d)}m · ~${ankunft}s · ${badge}</div>
-        </div>
-        <div class="lTime" style="color:${tCol}">${tTxt}</div>
-      </div>`;
+  list.innerHTML=nearby.map(a=>{
+    const ph=getPhase(a);
+    const icon=ph.c==='g'?'✓':ph.c==='o'?'!':'✗';
+    const tTxt=ph.c==='g'?ph.rem+'s grün':'grün in '+ph.toGreen+'s';
+    const tCol=ph.c==='g'?'var(--g)':ph.c==='o'?'var(--o)':'var(--r)';
+    const ankunft=rec>0?Math.round(a.d/(rec/3.6)):'?';
+    const cd=communityData[a.id];
+    const meld=cd?(cd.gruen+cd.rot):0;
+    const src=a.osm?'🗺️':a.neu?'📍':'📋';
+    const srcTip=a.osm?'OSM':a.neu?'Neu':'Basis';
+    return `<div class="row">
+      <div class="lCirc ${ph.c}">${icon}</div>
+      <div class="lInfo">
+        <div class="lName">${a.name}</div>
+        <div class="lMeta">${Math.round(a.d)}m · ~${ankunft}s · ${src}${srcTip}${meld>0?' · '+meld+'✓':''}</div>
+      </div>
+      <div class="lTime" style="color:${tCol}">${tTxt}</div>
+    </div>`;
   }).join('');
 }
 
 // ═══════════════════════════════════════════
-// TOAST
+// TOAST & HELPERS
 // ═══════════════════════════════════════════
-function showToast(msg, type='info') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast '+type+' show';
-  setTimeout(()=>t.classList.remove('show'), 3000);
+function showToast(msg,type='info'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast '+type+' show';
+  setTimeout(()=>t.classList.remove('show'),3000);
 }
-
-function show(id) {
+function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
   document.getElementById(id).classList.add('on');
 }
 
-setInterval(tick, 1000);
-try{ navigator.wakeLock?.request('screen'); }catch(e){}
+setInterval(tick,1000);
+try{navigator.wakeLock?.request('screen');}catch(e){}
 </script>
 </body>
 </html>
