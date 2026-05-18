@@ -803,6 +803,7 @@ function boot() {
   navigator.geolocation.getCurrentPosition(pos => {
     onPos(pos);
     ladeOSMAmpeln(pos.coords.latitude, pos.coords.longitude);
+    ladeHamburgAmpeln(pos.coords.latitude, pos.coords.longitude);
   }, onErr, {enableHighAccuracy:true, timeout:15000});
   navigator.geolocation.watchPosition(onPos, onErr,
     {enableHighAccuracy:true, maximumAge:1500, timeout:10000});
@@ -961,7 +962,7 @@ function tick(){
     const src=a.hh?'🚦':a.osm?'🗺️':a.neu?'📍':'📋';
     const liveTag = a.hh && HH_LIVE[a.iotId] ? ' · ⚡Live' : '';
     const avgRot=mess>=1?Math.round(cd.rotDauern.reduce((x,y)=>x+y,0)/cd.rotDauern.length):null;
-    const meta=`${Math.round(a.d)}m · ~${ankunft}s · ${src}${mess>0?` · ⏱️${avgRot}s Ø (${mess}×)`:''}${ph.community?' · ✅':''}`;
+    const meta=`${Math.round(a.d)}m · ~${ankunft}s · ${src}${mess>0?` · ⏱️${avgRot}s Ø (${mess}×)`:''}${ph.community?' · ✅':''}${liveTag}`;
     return `<div class="row">
       <div class="lCirc ${ph.c}">${icon}</div>
       <div class="lInfo">
