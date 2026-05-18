@@ -594,6 +594,20 @@ async function ladeOSMAmpeln(myLat, myLng) {
       z:60, p:(i*7)%60, osm:true
     }));
 
+    // Reverse Geocoding für Ampeln ohne echten Namen (max 10 gleichzeitig)
+    const ohneNamen = neueListe.filter(a => a.name.startsWith('Ampel '));
+    const batch = ohneNamen.slice(0, 10);
+    await Promise.all(batch.map(async a => {
+      try {
+        const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${a.lat}&lon=${a.lng}&format=json`);
+        const d = await r.json();
+        const addr = d.address || {};
+        const strasse = addr.road || addr.street || addr.pedestrian || '';
+        const kreuzung = addr.suburb || addr.neighbourhood || '';
+        if (strasse) a.name = strasse + (kreuzung ? ' / ' + kreuzung : '');
+      } catch(e) {}
+    }));
+
     // Sanft einblenden: nur übernehmen wenn Liste nicht leer
     // und sich deutlich von aktueller unterscheidet (>10 neue Ampeln)
     if (neueListe.length > 0) {
