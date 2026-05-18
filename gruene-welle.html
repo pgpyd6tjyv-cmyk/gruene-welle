@@ -405,6 +405,11 @@ const AUTO_GRUEN_ABSTAND = 60;  // Ampel muss näher als 60m sein
 const AUTO_GRUEN_MIN_SPD = 10;  // mind. 10 km/h um als "durchgefahren" zu gelten
 
 // Hamburg Echtzeit-Ampeldaten
+const HH_PROXY = 'https://hh-ampel-proxy.7wkj6vwb42.workers.dev';
+async function hhFetch(url) {
+  const res = await fetch(`${HH_PROXY}?url=${encodeURIComponent(url)}`);
+  return res.json();
+}
 let HH_LIVE = {}; // { iotId: { phase: 'g'|'r'|'o', seit: timestamp } }
 let HH_THINGS = []; // { id, iotId, lat, lng, name }
 let hhLiveAktiv = false;
@@ -423,9 +428,8 @@ async function ladeHamburgAmpeln(myLat, myLng) {
     const url = `https://tld.iot.hamburg.de/v1.1/Things` +
       `?$top=100&$expand=Locations` +
       `&$filter=st_within(Locations/location,geography'${poly}')`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
+    const data = await hhFetch(url);
+    if (!data) throw new Error('Keine Daten');
 
     const things = (data.value || []).filter(t => {
       const loc = t.Locations?.[0]?.location?.coordinates;
@@ -477,8 +481,7 @@ async function ladeHamburgSignale() {
         const url = `https://tld.iot.hamburg.de/v1.1/Things(${a.iotId})/Datastreams` +
           `?$filter=properties/layerName eq 'primary_signal'` +
           `&$expand=Observations($top=1;$orderby=phenomenonTime desc)`;
-        const res = await fetch(url);
-        const data = await res.json();
+        const data = await hhFetch(url);
         const obs = data.value?.[0]?.Observations?.[0]?.result;
         if (obs !== undefined) {
           // Hamburg Signal: 1=rot, 2=gelb, 3=grün, 4=rotgelb, 8=dunkel
@@ -490,7 +493,8 @@ async function ladeHamburgSignale() {
   } catch(e) {}
 }
 
-const HH_PROXY = 'https://hh-ampel-proxy.7wkj6vwb42.workers.dev';
+// Hamburg Signale alle 5 Sekunden aktualisieren
+setInterval(() => { if (hhLiveAktiv && lat) ladeHamburgSignale(); }, 5000);
 
 async function hhFetch(url) {
   const res = await fetch(`${HH_PROXY}?url=${encodeURIComponent(url)}`);
