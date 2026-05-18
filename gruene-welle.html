@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Grüne Welle HH</title>
+<title>Grüne Welle HH v2</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -595,18 +595,38 @@ async function ladeOSMAmpeln(myLat, myLng) {
     }));
 
     // Reverse Geocoding für Ampeln ohne echten Namen (max 10 gleichzeitig)
+    // Cache aus localStorage laden
+    let geoCache = {};
+    try { geoCache = JSON.parse(localStorage.getItem('ampel_geo_cache') || '{}'); } catch(e) {}
+
     const ohneNamen = neueListe.filter(a => a.name.startsWith('Ampel '));
-    const batch = ohneNamen.slice(0, 10);
-    await Promise.all(batch.map(async a => {
+    
+    // Zuerst Cache anwenden
+    ohneNamen.forEach(a => {
+      const key = `${a.lat.toFixed(5)}_${a.lng.toFixed(5)}`;
+      if (geoCache[key]) a.name = geoCache[key];
+    });
+
+    // Dann nur die noch unbekannten geocodieren (max 10)
+    const nochUnbekannt = ohneNamen.filter(a => a.name.startsWith('Ampel ')).slice(0, 10);
+    await Promise.all(nochUnbekannt.map(async a => {
       try {
         const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${a.lat}&lon=${a.lng}&format=json`);
         const d = await r.json();
         const addr = d.address || {};
         const strasse = addr.road || addr.street || addr.pedestrian || '';
         const kreuzung = addr.suburb || addr.neighbourhood || '';
-        if (strasse) a.name = strasse + (kreuzung ? ' / ' + kreuzung : '');
+        if (strasse) {
+          a.name = strasse + (kreuzung ? ' / ' + kreuzung : '');
+          // In Cache speichern
+          const key = `${a.lat.toFixed(5)}_${a.lng.toFixed(5)}`;
+          geoCache[key] = a.name;
+        }
       } catch(e) {}
     }));
+
+    // Cache zurückschreiben
+    try { localStorage.setItem('ampel_geo_cache', JSON.stringify(geoCache)); } catch(e) {}
 
     // Sanft einblenden: nur übernehmen wenn Liste nicht leer
     // und sich deutlich von aktueller unterscheidet (>10 neue Ampeln)
