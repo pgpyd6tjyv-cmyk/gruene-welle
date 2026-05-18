@@ -44,12 +44,14 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
 .osm-dot{width:8px;height:8px;border-radius:50%;background:var(--m);transition:background .3s;flex-shrink:0}
 .osm-dot.on{background:var(--a);box-shadow:0 0 6px var(--a)}
 
-.hero{padding:18px 20px 12px;text-align:center;background:var(--card);border-bottom:1px solid var(--b)}
+/* HERO */
+.hero{padding:16px 20px 12px;text-align:center;background:var(--card);border-bottom:1px solid var(--b)}
 .hlbl{font-size:10px;text-transform:uppercase;letter-spacing:2.5px;color:var(--m);margin-bottom:4px}
 .hspd{font-size:88px;font-weight:700;line-height:1;letter-spacing:-5px;transition:color .4s}
 .hunit{font-size:18px;color:var(--m);margin-top:-2px}
 .hstatus{font-size:13px;font-weight:500;margin-top:6px;transition:color .4s}
 
+/* GRID */
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--b);
       border-top:1px solid var(--b);border-bottom:1px solid var(--b)}
 .cell{background:var(--card);padding:11px 14px}
@@ -57,18 +59,39 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
 .cval{font-size:22px;font-weight:700;letter-spacing:-.5px;transition:color .3s}
 .cunit{font-size:10px;color:var(--m);margin-top:1px}
 
-/* MELDE */
+/* MELDE SECTION */
 .melde-section{padding:10px 14px;background:var(--card);border-bottom:1px solid var(--b)}
 .melde-title{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--m);margin-bottom:8px}
+
+/* TIMER ANZEIGE */
+.timer-box{display:none;background:rgba(255,61,90,.08);border:1px solid rgba(255,61,90,.2);
+           border-radius:12px;padding:10px 14px;margin-bottom:8px;
+           flex-direction:column;align-items:center;gap:4px}
+.timer-box.active{display:flex}
+.timer-label{font-size:10px;color:var(--r);text-transform:uppercase;letter-spacing:1.5px}
+.timer-val{font-family:-apple-system,sans-serif;font-size:42px;font-weight:700;
+           color:var(--r);letter-spacing:-1px;line-height:1}
+.timer-sub{font-size:10px;color:var(--m)}
+
+/* BUTTONS */
 .melde-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.btn-gruen{padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;
-           cursor:pointer;background:rgba(0,255,136,.12);color:var(--g);
-           border:2px solid rgba(0,255,136,.25);transition:all .15s}
-.btn-rot{padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;
-         cursor:pointer;background:rgba(255,61,90,.12);color:var(--r);
-         border:2px solid rgba(255,61,90,.25);transition:all .15s}
-.btn-gruen:active{background:rgba(0,255,136,.3);transform:scale(.96)}
-.btn-rot:active{background:rgba(255,61,90,.3);transform:scale(.96)}
+
+.btn-rot-main{padding:16px 10px;border:none;border-radius:12px;font-size:13px;font-weight:700;
+              cursor:pointer;background:rgba(255,61,90,.12);color:var(--r);
+              border:2px solid rgba(255,61,90,.25);transition:all .15s;line-height:1.3;text-align:center}
+.btn-rot-main:active{background:rgba(255,61,90,.3);transform:scale(.96)}
+.btn-rot-main.active-state{background:rgba(255,61,90,.2);border-color:var(--r);
+                           box-shadow:0 0 16px rgba(255,61,90,.3)}
+
+.btn-gruen-main{padding:16px 10px;border:none;border-radius:12px;font-size:13px;font-weight:700;
+                cursor:pointer;background:rgba(0,255,136,.06);color:var(--m);
+                border:2px solid rgba(255,255,255,.08);transition:all .15s;line-height:1.3;text-align:center;
+                opacity:0.5}
+.btn-gruen-main.enabled{background:rgba(0,255,136,.15);color:var(--g);
+                        border-color:rgba(0,255,136,.3);opacity:1;
+                        box-shadow:0 0 16px rgba(0,255,136,.2)}
+.btn-gruen-main:active{transform:scale(.96)}
+
 .btn-neu{width:100%;margin-top:8px;padding:11px;border:none;border-radius:12px;font-size:13px;
          font-weight:700;cursor:pointer;background:rgba(191,95,255,.1);color:var(--p);
          border:2px solid rgba(191,95,255,.22);transition:all .15s}
@@ -103,18 +126,16 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
 .up{background:rgba(0,212,255,.1);color:var(--a)}
 .dn{background:rgba(255,61,90,.1);color:var(--r)}
 
-/* Loading */
 .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;
          padding:30px;color:var(--m);font-size:12px;gap:10px}
 .spinner{width:24px;height:24px;border:2px solid var(--b);border-top-color:var(--a);
          border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* Toast */
 .toast{position:fixed;bottom:75px;left:50%;transform:translateX(-50%) translateY(20px);
        padding:9px 18px;border-radius:12px;font-size:12px;font-weight:600;
-       opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap;max-width:90vw;
-       overflow:hidden;text-overflow:ellipsis}
+       opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap;
+       max-width:90vw;overflow:hidden;text-overflow:ellipsis}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.gruen{background:rgba(0,255,136,.2);color:var(--g);border:1px solid rgba(0,255,136,.3)}
 .toast.rot{background:rgba(255,61,90,.2);color:var(--r);border:1px solid rgba(255,61,90,.3)}
@@ -133,12 +154,12 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
 <div class="screen on" id="s0">
   <div class="icon">🚦</div>
   <div class="t1">Grüne Welle HH</div>
-  <div class="t2">Echte Ampeln aus OpenStreetMap.<br>Community meldet Phasen — App lernt mit.</div>
+  <div class="t2">Halte an roten Ampeln ROT — fahre los mit GRÜN.<br>Die App lernt die echten Phasen.</div>
   <button class="btnS" onclick="boot()">▶ GPS starten</button>
   <div class="chips">
     <span class="chip">📍 Echtes GPS</span>
+    <span class="chip">⏱️ Lernend</span>
     <span class="chip">🗺️ OpenStreetMap</span>
-    <span class="chip">🧠 Lernend</span>
   </div>
 </div>
 
@@ -154,6 +175,7 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
     </div>
   </div>
 
+  <!-- EMPFOHLENE GESCHWINDIGKEIT -->
   <div class="hero">
     <div class="hlbl">Empfohlene Geschwindigkeit</div>
     <div class="hspd" id="hspd" style="color:var(--g)">—</div>
@@ -180,19 +202,32 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
     <div class="cell">
       <div class="clbl">Meldungen</div>
       <div class="cval" id="dataPoints" style="color:var(--a)">0</div>
-      <div class="cunit">Community</div>
+      <div class="cunit">Gelernte Phasen</div>
     </div>
   </div>
 
-  <!-- MELDE -->
+  <!-- MELDE SECTION -->
   <div class="melde-section">
     <div class="melde-title">🚦 Ampel melden</div>
-    <div class="melde-btns">
-      <button class="btn-gruen" onclick="melde('green')">🟢 GRÜN</button>
-      <button class="btn-rot"   onclick="melde('red')">🔴 ROT</button>
+
+    <!-- TIMER -->
+    <div class="timer-box" id="timerBox">
+      <div class="timer-label">⏱️ Rotphase läuft</div>
+      <div class="timer-val" id="timerVal">0s</div>
+      <div class="timer-sub" id="timerAmpel">Warte auf Grün…</div>
     </div>
+
+    <div class="melde-btns">
+      <button class="btn-rot-main" id="btnRot" onclick="meldeRot()">
+        🔴 Ich halte<br><span style="font-size:11px;opacity:.7">Ampel ist rot</span>
+      </button>
+      <button class="btn-gruen-main" id="btnGruen" onclick="meldeGruen()">
+        🟢 Ich fahre los<br><span style="font-size:11px;opacity:.7">Ampel ist grün</span>
+      </button>
+    </div>
+
     <button class="btn-neu" onclick="neueAmpel()">📍 Neue Ampel hier einzeichnen</button>
-    <div class="melde-feedback" id="meldeFeedback">Tippe wenn du an einer Ampel bist</div>
+    <div class="melde-feedback" id="meldeFeedback">Tippe ROT wenn du an einer roten Ampel hältst</div>
   </div>
 
   <div class="listWrap">
@@ -200,7 +235,9 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
       <span>Ampeln in der Nähe</span>
       <span class="osm-badge" id="communityCount">lädt…</span>
     </div>
-    <div id="ampList"><div class="loading"><div class="spinner"></div><span>Ampeln werden geladen…</span></div></div>
+    <div id="ampList">
+      <div class="loading"><div class="spinner"></div><span>Ampeln werden geladen…</span></div>
+    </div>
   </div>
 
   <div class="btm">
@@ -225,49 +262,198 @@ const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
 // ═══════════════════════════════════════════
 let lat=null, lng=null, spd=0;
 let T=0;
-let OSM_DB = [];       // Echte Ampeln aus OpenStreetMap
-let communityData = {};
+let OSM_DB = [];
+let communityData = {}; // { ampel_id: { rotDauern: [], gruenDauern: [] } }
 let totalMeldungen = 0;
+let osmGeladen = false;
+let letzterOSMLat = null;
+
+// Timer State
+let rotStartTime = null;      // Wann ROT gedrückt wurde
+let aktuelleAmpel = null;     // Welche Ampel gerade gemessen wird
+let timerInterval = null;
 
 // ═══════════════════════════════════════════
-// OPENSTREETMAP: Echte Ampeln laden
-// Overpass API — alle Ampeln in 1.5km Umkreis
+// ROT MELDEN — Timer startet
+// ═══════════════════════════════════════════
+function meldeRot() {
+  if (!lat) { showToast('Erst GPS aktivieren!', 'info'); return; }
+
+  const db = OSM_DB.length ? OSM_DB : FALLBACK_DB;
+  const nearest = db.map(a=>({...a,d:dist(lat,lng,a.lat,a.lng)})).sort((a,b)=>a.d-b.d)[0];
+
+  if (!nearest || nearest.d > 100) {
+    showToast('Keine Ampel in 100m Umkreis', 'info'); return;
+  }
+
+  // Timer starten
+  rotStartTime = Date.now();
+  aktuelleAmpel = nearest;
+
+  // UI updaten
+  document.getElementById('timerBox').classList.add('active');
+  document.getElementById('timerAmpel').textContent = nearest.name;
+  document.getElementById('btnRot').classList.add('active-state');
+  document.getElementById('btnGruen').classList.add('enabled');
+  document.getElementById('meldeFeedback').textContent = '⏱️ Messe Rotphase von: ' + nearest.name;
+
+  // Timer hochzählen
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    const sek = Math.round((Date.now() - rotStartTime) / 1000);
+    document.getElementById('timerVal').textContent = sek + 's';
+  }, 500);
+
+  showToast('🔴 Rotphase startet — tippe GRÜN wenn du losfährst', 'rot');
+}
+
+// ═══════════════════════════════════════════
+// GRÜN MELDEN — Timer stoppt, Dauer speichern
+// ═══════════════════════════════════════════
+async function meldeGruen() {
+  if (!rotStartTime || !aktuelleAmpel) {
+    showToast('Erst ROT tippen wenn du an einer roten Ampel hältst!', 'info');
+    return;
+  }
+
+  const rotDauer = Math.round((Date.now() - rotStartTime) / 1000);
+
+  // Plausibilitätsprüfung (5-180 Sekunden)
+  if (rotDauer < 5) {
+    showToast('Zu kurz — mindestens 5 Sekunden', 'info');
+    return;
+  }
+  if (rotDauer > 180) {
+    showToast('Zu lang — war das wirklich eine Ampel?', 'info');
+    resetTimer();
+    return;
+  }
+
+  // Timer stoppen
+  clearInterval(timerInterval);
+
+  // In Supabase speichern
+  const now = new Date();
+  await sb.from('ampel_meldungen').insert({
+    ampel_id:   aktuelleAmpel.id,
+    ampel_name: aktuelleAmpel.name,
+    phase:      'rot_dauer',
+    rot_dauer:  rotDauer,
+    lat, lng,
+    tageszeit:  now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds(),
+    wochentag:  now.getDay(),
+    stunde:     now.getHours(),
+    created_at: now.toISOString()
+  }).catch(e => console.log('Supabase:', e));
+
+  // Lokal speichern
+  if (!communityData[aktuelleAmpel.id]) communityData[aktuelleAmpel.id] = {rotDauern:[], gruenDauern:[]};
+  communityData[aktuelleAmpel.id].rotDauern.push(rotDauer);
+  totalMeldungen++;
+  document.getElementById('dataPoints').textContent = totalMeldungen;
+
+  // Zyklus neu berechnen
+  const cd = communityData[aktuelleAmpel.id];
+  if (cd.rotDauern.length >= 3) {
+    const avgRot = Math.round(cd.rotDauern.reduce((a,b)=>a+b,0) / cd.rotDauern.length);
+    // Zyklus schätzen: Rotphase ca 40% → Zyklus = rotDauer / 0.4
+    const zyklus = Math.round(avgRot / 0.4);
+    const idx = (OSM_DB.length ? OSM_DB : FALLBACK_DB).findIndex(a=>a.id===aktuelleAmpel.id);
+    if (idx>=0) {
+      (OSM_DB.length ? OSM_DB : FALLBACK_DB)[idx].z = Math.max(30, Math.min(120, zyklus));
+    }
+  }
+
+  showToast(`✅ ${aktuelleAmpel.name}: ${rotDauer}s Rotphase gespeichert!`, 'gruen');
+  document.getElementById('meldeFeedback').textContent =
+    `✓ ${aktuelleAmpel.name} — ${rotDauer}s Rot gelernt (${(communityData[aktuelleAmpel.id]?.rotDauern?.length||1)}. Messung)`;
+
+  resetTimer();
+}
+
+function resetTimer() {
+  rotStartTime = null;
+  aktuelleAmpel = null;
+  clearInterval(timerInterval);
+  document.getElementById('timerBox').classList.remove('active');
+  document.getElementById('timerVal').textContent = '0s';
+  document.getElementById('btnRot').classList.remove('active-state');
+  document.getElementById('btnGruen').classList.remove('enabled');
+}
+
+// ═══════════════════════════════════════════
+// NEUE AMPEL EINZEICHNEN
+// ═══════════════════════════════════════════
+async function neueAmpel() {
+  if (!lat) { showToast('Erst GPS aktivieren!', 'info'); return; }
+  const db = OSM_DB.length ? OSM_DB : FALLBACK_DB;
+  const zuNah = db.find(a => dist(lat,lng,a.lat,a.lng) < 25);
+  if (zuNah) { showToast('Ampel bereits bekannt: ' + zuNah.name, 'info'); return; }
+
+  let name = 'Neue Ampel';
+  try {
+    const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
+    const d = await r.json();
+    const a = d.address||{};
+    name = (a.road||a.street||'Unbekannte Str.') + (a.house_number?' '+a.house_number:'');
+  } catch(e){}
+
+  const newId = 80000 + (OSM_DB.length ? OSM_DB : FALLBACK_DB).length;
+  (OSM_DB.length ? OSM_DB : FALLBACK_DB).push({id:newId, lat, lng, name, z:60, p:Math.round(Math.random()*60), neu:true});
+  await sb.from('neue_ampeln').insert({lat, lng, name, created_at: new Date().toISOString()}).catch(()=>{});
+
+  showToast('📍 Neue Ampel: ' + name, 'neu');
+  document.getElementById('meldeFeedback').textContent = '📍 ' + name + ' hinzugefügt — jetzt ROT/GRÜN melden!';
+  document.getElementById('communityCount').textContent = (OSM_DB.length||FALLBACK_DB.length) + ' Ampeln';
+}
+
+// ═══════════════════════════════════════════
+// OSM LADEN
 // ═══════════════════════════════════════════
 async function ladeOSMAmpeln(myLat, myLng) {
   try {
-    const r = 0.018; // ~1.5km in Grad
+    const r = 0.018;
     const bbox = `${myLat-r},${myLng-r},${myLat+r},${myLng+r}`;
     const query = `[out:json][timeout:10];node[highway=traffic_signals](${bbox});out body;`;
-    const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
-
-    const res = await fetch(url);
+    const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
     const data = await res.json();
-
-    OSM_DB = (data.elements || []).map((n, i) => ({
-      id:   90000 + i,
-      lat:  n.lat,
-      lng:  n.lon,
-      name: n.tags?.name || n.tags?.['addr:street'] || `Ampel ${i+1}`,
-      z:    60,  // Standard-Zyklus, wird durch Community verfeinert
-      p:    (i * 7) % 60,  // Versatz damit nicht alle gleich schalten
-      osm:  true
+    OSM_DB = (data.elements||[]).map((n,i)=>({
+      id:90000+i, lat:n.lat, lng:n.lon,
+      name: n.tags?.name||n.tags?.['addr:street']||`Ampel ${i+1}`,
+      z:60, p:(i*7)%60, osm:true
     }));
-
     document.getElementById('osmDot').classList.add('on');
     document.getElementById('osmCount').textContent = OSM_DB.length + ' OSM';
     document.getElementById('communityCount').textContent = OSM_DB.length + ' Ampeln';
     showToast(`🗺️ ${OSM_DB.length} echte Ampeln geladen!`, 'info');
-
   } catch(e) {
-    console.log('OSM Fehler:', e);
-    // Fallback auf Basisdaten
     OSM_DB = FALLBACK_DB;
     document.getElementById('communityCount').textContent = OSM_DB.length + ' Ampeln (offline)';
   }
 }
 
 // ═══════════════════════════════════════════
-// FALLBACK (wenn OSM nicht erreichbar)
+// SUPABASE: Gelernte Phasen laden
+// ═══════════════════════════════════════════
+async function initDB() {
+  const { data } = await sb
+    .from('ampel_meldungen')
+    .select('ampel_id, rot_dauer')
+    .eq('phase', 'rot_dauer')
+    .limit(2000);
+
+  const stats = {};
+  (data||[]).forEach(m => {
+    if (!stats[m.ampel_id]) stats[m.ampel_id] = {rotDauern:[], gruenDauern:[]};
+    if (m.rot_dauer) stats[m.ampel_id].rotDauern.push(m.rot_dauer);
+  });
+  communityData = stats;
+  totalMeldungen = (data||[]).length;
+  document.getElementById('dataPoints').textContent = totalMeldungen;
+}
+
+// ═══════════════════════════════════════════
+// FALLBACK DB
 // ═══════════════════════════════════════════
 const FALLBACK_DB = [
   {id:1,  lat:53.54963,lng:9.96818,name:"Reeperbahn / Nobistor",      z:60,p:0  },
@@ -297,27 +483,7 @@ const FALLBACK_DB = [
 ];
 
 // ═══════════════════════════════════════════
-// SUPABASE: Community-Daten laden
-// ═══════════════════════════════════════════
-async function initDB() {
-  const { data } = await sb
-    .from('ampel_meldungen')
-    .select('ampel_id, phase')
-    .limit(1000);
-
-  const stats = {};
-  (data||[]).forEach(m => {
-    if (!stats[m.ampel_id]) stats[m.ampel_id] = {gruen:0,rot:0};
-    if (m.phase==='green') stats[m.ampel_id].gruen++;
-    else stats[m.ampel_id].rot++;
-  });
-  communityData = stats;
-  totalMeldungen = (data||[]).length;
-  document.getElementById('dataPoints').textContent = totalMeldungen;
-}
-
-// ═══════════════════════════════════════════
-// GPS STARTEN
+// GPS
 // ═══════════════════════════════════════════
 function boot() {
   show('s1');
@@ -329,95 +495,27 @@ function boot() {
   }
   navigator.geolocation.getCurrentPosition(pos => {
     onPos(pos);
-    // OSM Ampeln beim ersten Fix laden
     ladeOSMAmpeln(pos.coords.latitude, pos.coords.longitude);
   }, onErr, {enableHighAccuracy:true, timeout:15000});
-
   navigator.geolocation.watchPosition(onPos, onErr,
     {enableHighAccuracy:true, maximumAge:1500, timeout:10000});
 }
-
-let osmGeladen = false;
-let letzterOSMLat = null;
 
 function onPos(p) {
   lat = p.coords.latitude;
   lng = p.coords.longitude;
   spd = p.coords.speed!=null ? Math.round(p.coords.speed*3.6) : spd;
-
   document.getElementById('gdot').classList.add('on');
   document.getElementById('accTxt').textContent = '±'+Math.round(p.coords.accuracy)+'m';
   document.getElementById('locTxt').textContent = lat.toFixed(5)+' '+lng.toFixed(5);
-
-  // OSM neu laden wenn >500m bewegt
-  if (!osmGeladen || (letzterOSMLat && dist(lat,lng,letzterOSMLat.lat,letzterOSMLat.lng) > 500)) {
-    osmGeladen = true;
-    letzterOSMLat = {lat, lng};
-    ladeOSMAmpeln(lat, lng);
+  if (!osmGeladen || (letzterOSMLat && dist(lat,lng,letzterOSMLat.lat,letzterOSMLat.lng)>500)) {
+    osmGeladen=true; letzterOSMLat={lat,lng};
+    ladeOSMAmpeln(lat,lng);
   }
 }
-
 function onErr() {
-  document.getElementById('locTxt').textContent = 'GPS-Fehler';
-  if (!OSM_DB.length) OSM_DB = FALLBACK_DB;
-}
-
-// ═══════════════════════════════════════════
-// MELDEN
-// ═══════════════════════════════════════════
-async function melde(phase) {
-  if (!lat) { showToast('Erst GPS aktivieren!', 'info'); return; }
-  const db = OSM_DB.length ? OSM_DB : FALLBACK_DB;
-  const nearest = db.map(a=>({...a,d:dist(lat,lng,a.lat,a.lng)})).sort((a,b)=>a.d-b.d)[0];
-  if (!nearest || nearest.d > 80) {
-    showToast('Keine Ampel in 80m Umkreis', 'info'); return;
-  }
-  const now = new Date();
-  await sb.from('ampel_meldungen').insert({
-    ampel_id: nearest.id, ampel_name: nearest.name, phase,
-    lat, lng, tageszeit: now.getHours()*3600+now.getMinutes()*60+now.getSeconds(),
-    created_at: now.toISOString()
-  });
-  if (!communityData[nearest.id]) communityData[nearest.id]={gruen:0,rot:0};
-  if (phase==='green') communityData[nearest.id].gruen++;
-  else communityData[nearest.id].rot++;
-  totalMeldungen++;
-  document.getElementById('dataPoints').textContent = totalMeldungen;
-  const txt = phase==='green'?'grün':'rot';
-  showToast(`${phase==='green'?'🟢':'🔴'} ${nearest.name} — ${txt} (${Math.round(nearest.d)}m)`, phase==='green'?'gruen':'rot');
-  document.getElementById('meldeFeedback').textContent = `✓ ${nearest.name} als ${txt} gemeldet`;
-}
-
-// ═══════════════════════════════════════════
-// NEUE AMPEL EINZEICHNEN
-// ═══════════════════════════════════════════
-async function neueAmpel() {
-  if (!lat) { showToast('Erst GPS aktivieren!', 'info'); return; }
-  const db = OSM_DB.length ? OSM_DB : FALLBACK_DB;
-  const zuNah = db.find(a => dist(lat,lng,a.lat,a.lng) < 25);
-  if (zuNah) {
-    showToast('Ampel bereits bekannt: ' + zuNah.name, 'info'); return;
-  }
-
-  // Straßenname holen
-  let name = 'Neue Ampel';
-  try {
-    const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
-    const d = await r.json();
-    const a = d.address||{};
-    name = (a.road||a.street||'Unbekannte Str.') + (a.house_number?' '+a.house_number:'');
-  } catch(e){}
-
-  // Lokal hinzufügen
-  const newId = 80000 + OSM_DB.length;
-  OSM_DB.push({id:newId, lat, lng, name, z:60, p:Math.round(Math.random()*60), neu:true});
-
-  // In Supabase speichern
-  await sb.from('neue_ampeln').insert({lat, lng, name, created_at: new Date().toISOString()}).catch(()=>{});
-
-  showToast('📍 Neue Ampel eingetragen: ' + name, 'neu');
-  document.getElementById('meldeFeedback').textContent = '📍 ' + name + ' hinzugefügt';
-  document.getElementById('communityCount').textContent = OSM_DB.length + ' Ampeln';
+  document.getElementById('locTxt').textContent='GPS-Fehler';
+  if(!OSM_DB.length) OSM_DB=FALLBACK_DB;
 }
 
 // ═══════════════════════════════════════════
@@ -425,17 +523,18 @@ async function neueAmpel() {
 // ═══════════════════════════════════════════
 function getPhase(amp) {
   const cd = communityData[amp.id];
-  if (cd && (cd.gruen+cd.rot)>=5) {
-    const gruenAnteil = cd.gruen/(cd.gruen+cd.rot);
-    const gDauer = Math.round(amp.z * gruenAnteil);
-    const t = (T+amp.p) % amp.z;
-    if (t<gDauer) return {c:'g', rem:Math.ceil(gDauer-t), toGreen:0, community:true};
-    return {c:'r', rem:Math.ceil(amp.z-t), toGreen:Math.ceil(amp.z-t), community:true};
+  if (cd && cd.rotDauern.length >= 3) {
+    const avgRot = Math.round(cd.rotDauern.reduce((a,b)=>a+b,0)/cd.rotDauern.length);
+    const zyklus = Math.max(30, Math.min(120, Math.round(avgRot/0.4)));
+    const gruenDauer = zyklus - avgRot;
+    const t = (T+amp.p) % zyklus;
+    if (t < gruenDauer) return {c:'g', rem:Math.ceil(gruenDauer-t), toGreen:0, community:true};
+    return {c:'r', rem:Math.ceil(zyklus-t), toGreen:Math.ceil(zyklus-t), community:true};
   }
   const t=(T+amp.p)%amp.z, gE=amp.z*.60, oE=amp.z*.68;
-  if(t<gE)  return {c:'g',rem:Math.ceil(gE-t), toGreen:0,           community:false};
-  if(t<oE)  return {c:'o',rem:Math.ceil(oE-t), toGreen:Math.ceil(amp.z-t), community:false};
-  return          {c:'r',rem:Math.ceil(amp.z-t),toGreen:Math.ceil(amp.z-t), community:false};
+  if(t<gE) return {c:'g',rem:Math.ceil(gE-t),  toGreen:0,            community:false};
+  if(t<oE) return {c:'o',rem:Math.ceil(oE-t),  toGreen:Math.ceil(amp.z-t), community:false};
+  return         {c:'r',rem:Math.ceil(amp.z-t), toGreen:Math.ceil(amp.z-t), community:false};
 }
 
 // ═══════════════════════════════════════════
@@ -449,7 +548,7 @@ function bestSpeed(nearby) {
     let hit=0;
     for(const a of ahead){
       const fahr=a.d/(v/3.6);
-      const ph=getPhase({...a, p:(a.p+Math.round(fahr))%a.z});
+      const ph=getPhase({...a,p:(a.p+Math.round(fahr))%a.z});
       if(ph.c==='g') hit++;
     }
     if(hit>best.hit) best={v,hit};
@@ -467,7 +566,7 @@ function dist(a,b,c,d){
 }
 
 // ═══════════════════════════════════════════
-// UI UPDATE
+// UI TICK
 // ═══════════════════════════════════════════
 function tick(){
   T++;
@@ -506,7 +605,7 @@ function tick(){
 
   const list=document.getElementById('ampList');
   if(!nearby.length){
-    list.innerHTML='<div class="loading"><span>Keine Ampeln in 1.5km — OSM lädt…</span></div>';
+    list.innerHTML='<div class="loading"><span>Keine Ampeln in 1.5km</span></div>';
     return;
   }
   list.innerHTML=nearby.map(a=>{
@@ -516,14 +615,15 @@ function tick(){
     const tCol=ph.c==='g'?'var(--g)':ph.c==='o'?'var(--o)':'var(--r)';
     const ankunft=rec>0?Math.round(a.d/(rec/3.6)):'?';
     const cd=communityData[a.id];
-    const meld=cd?(cd.gruen+cd.rot):0;
+    const mess=cd?cd.rotDauern.length:0;
     const src=a.osm?'🗺️':a.neu?'📍':'📋';
-    const srcTip=a.osm?'OSM':a.neu?'Neu':'Basis';
+    const avgRot=mess>=1?Math.round(cd.rotDauern.reduce((x,y)=>x+y,0)/cd.rotDauern.length):null;
+    const meta=`${Math.round(a.d)}m · ~${ankunft}s · ${src}${mess>0?` · ⏱️${avgRot}s Ø (${mess}×)`:''}${ph.community?' · ✅':''}`;
     return `<div class="row">
       <div class="lCirc ${ph.c}">${icon}</div>
       <div class="lInfo">
         <div class="lName">${a.name}</div>
-        <div class="lMeta">${Math.round(a.d)}m · ~${ankunft}s · ${src}${srcTip}${meld>0?' · '+meld+'✓':''}</div>
+        <div class="lMeta">${meta}</div>
       </div>
       <div class="lTime" style="color:${tCol}">${tTxt}</div>
     </div>`;
@@ -531,12 +631,12 @@ function tick(){
 }
 
 // ═══════════════════════════════════════════
-// TOAST & HELPERS
+// HELPERS
 // ═══════════════════════════════════════════
 function showToast(msg,type='info'){
   const t=document.getElementById('toast');
   t.textContent=msg; t.className='toast '+type+' show';
-  setTimeout(()=>t.classList.remove('show'),3000);
+  setTimeout(()=>t.classList.remove('show'),3500);
 }
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
