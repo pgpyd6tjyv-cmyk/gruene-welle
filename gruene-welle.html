@@ -927,9 +927,14 @@ function dist(a,b,c,d){
 function tick(){
   T++;
   if(!lat) return;
-  // NUR HH-Live (OSM deaktiviert für Test)
-  const hhNearby = HH_THINGS.map(a=>({...a,d:dist(lat,lng,a.lat,a.lng)})).filter(a=>a.d<1500);
+  // HH-Live + OSM + Fallback zusammenführen
+  const hhNearby = HH_THINGS.map(a=>({...a,d:dist(lat,lng,a.lat,a.lng)})).filter(a=>a.d<2000);
+  const osmNearby = (OSM_DB.length ? OSM_DB : FALLBACK_DB).map(a=>({...a,d:dist(lat,lng,a.lat,a.lng)})).filter(a=>a.d<2000);
+  // HH-Live bevorzugen, OSM als Fallback
   const nearby = [...hhNearby];
+  osmNearby.forEach(o => {
+    if (!hhNearby.find(h => dist(h.lat,h.lng,o.lat,o.lng) < 50)) nearby.push(o);
+  });
   nearby.sort((a,b)=>a.d-b.d);
   const nearbyTop = nearby.slice(0,8);
 
