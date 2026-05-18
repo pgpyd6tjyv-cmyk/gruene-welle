@@ -156,6 +156,26 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
 .toast.info{background:rgba(0,212,255,.2);color:var(--a);border:1px solid rgba(0,212,255,.3)}
 .toast.neu{background:rgba(191,95,255,.2);color:var(--p);border:1px solid rgba(191,95,255,.3)}
 
+.btn-stats{background:none;border:none;font-size:20px;cursor:pointer;padding:4px 8px}
+
+/* STATS SCREEN */
+#s2{background:var(--bg)}
+.stats-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px}
+.stats-section{margin-bottom:20px}
+.stats-title{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--m);
+             margin-bottom:10px;padding-left:2px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stats-card{background:var(--card);border:1px solid var(--b);border-radius:14px;
+            padding:14px 10px;text-align:center}
+.stats-icon{font-size:22px;margin-bottom:6px}
+.stats-val{font-size:26px;font-weight:700;letter-spacing:-.5px;margin-bottom:2px}
+.stats-lbl{font-size:10px;color:var(--m)}
+.top-row{display:flex;align-items:center;gap:10px;padding:8px 12px;
+         background:var(--card);border:1px solid var(--b);border-radius:12px;margin-bottom:6px}
+.top-rank{font-size:14px;font-weight:700;color:var(--m);min-width:20px}
+.top-name{flex:1;font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-count{font-size:12px;font-weight:700;color:var(--a)}
+
 .listWrap::-webkit-scrollbar{width:3px}
 .listWrap::-webkit-scrollbar-thumb{background:var(--b);border-radius:2px}
 </style>
@@ -270,6 +290,81 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
       <div class="val" id="btmSpd">0 km/h</div>
     </div>
     <div class="pill ok" id="pill">✓ Passt</div>
+    <button class="btn-stats" onclick="zeigeStats()">📊</button>
+  </div>
+</div>
+
+<!-- STATISTIK SCREEN -->
+<div class="screen" id="s2">
+  <div class="topbar">
+    <div class="tb-l">📊 Statistik</div>
+    <div class="tb-r">
+      <button onclick="show('s1')" style="background:none;border:none;color:var(--a);font-size:12px;cursor:pointer">← Zurück</button>
+    </div>
+  </div>
+
+  <div class="stats-wrap">
+
+    <!-- HEUTE -->
+    <div class="stats-section">
+      <div class="stats-title">Heute</div>
+      <div class="stats-grid">
+        <div class="stats-card">
+          <div class="stats-icon">🟢</div>
+          <div class="stats-val" id="st-gruen">—</div>
+          <div class="stats-lbl">Grünphasen</div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-icon">🔴</div>
+          <div class="stats-val" id="st-rot">—</div>
+          <div class="stats-lbl">Rotstopps</div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-icon">⏱️</div>
+          <div class="stats-val" id="st-avg">—</div>
+          <div class="stats-lbl">Ø Rotzeit (s)</div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-icon">✅</div>
+          <div class="stats-val" id="st-quote">—</div>
+          <div class="stats-lbl">Grünquote</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP AMPELN -->
+    <div class="stats-section">
+      <div class="stats-title">Deine häufigsten Ampeln</div>
+      <div id="st-topAmpeln"><div class="loading"><div class="spinner"></div></div></div>
+    </div>
+
+    <!-- COMMUNITY -->
+    <div class="stats-section">
+      <div class="stats-title">Community gesamt</div>
+      <div class="stats-grid">
+        <div class="stats-card">
+          <div class="stats-icon">👥</div>
+          <div class="stats-val" id="st-total">—</div>
+          <div class="stats-lbl">Meldungen</div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-icon">🚦</div>
+          <div class="stats-val" id="st-ampeln">—</div>
+          <div class="stats-lbl">Ampeln bekannt</div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-icon">⏱️</div>
+          <div class="stats-val" id="st-cavg">—</div>
+          <div class="stats-lbl">Ø Rotzeit (s)</div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-icon">📅</div>
+          <div class="stats-val" id="st-heute-c">—</div>
+          <div class="stats-lbl">Heute (alle)</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -399,11 +494,20 @@ async function meldeGruen() {
 function resetTimer() {
   rotStartTime = null;
   aktuelleAmpel = null;
+  aktuelleRichtung = 'geradeaus';
   clearInterval(timerInterval);
   document.getElementById('timerBox').classList.remove('active');
+  document.getElementById('richtungBox').classList.remove('active');
   document.getElementById('timerVal').textContent = '0s';
   document.getElementById('btnRot').classList.remove('active-state');
   document.getElementById('btnGruen').classList.remove('enabled');
+}
+
+function setRichtung(r) {
+  aktuelleRichtung = r;
+  document.querySelectorAll('.btn-richtung').forEach(b => b.classList.remove('selected'));
+  const idx = r === 'links' ? 0 : r === 'geradeaus' ? 1 : 2;
+  document.querySelectorAll('.btn-richtung')[idx].classList.add('selected');
 }
 
 // ═══════════════════════════════════════════
