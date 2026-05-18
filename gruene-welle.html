@@ -279,6 +279,11 @@ let rotStartTime = null;
 let aktuelleAmpel = null;
 let timerInterval = null;
 
+// Auto-Grün Erkennung
+let autoGruenTracked = {}; // { ampel_id: true } — verhindert Doppel-Speicherung
+const AUTO_GRUEN_ABSTAND = 60;  // Ampel muss näher als 60m sein
+const AUTO_GRUEN_MIN_SPD = 10;  // mind. 10 km/h um als "durchgefahren" zu gelten
+
 // ═══════════════════════════════════════════
 // ROT MELDEN
 // ═══════════════════════════════════════════
