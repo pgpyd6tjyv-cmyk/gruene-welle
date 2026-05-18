@@ -63,6 +63,20 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
 .melde-section{padding:10px 14px;background:var(--card);border-bottom:1px solid var(--b)}
 .melde-title{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--m);margin-bottom:8px}
 
+.richtung-box{display:none;background:rgba(255,170,0,.08);border:1px solid rgba(255,170,0,.2);
+              border-radius:12px;padding:10px 14px;margin-bottom:8px;}
+.richtung-box.active{display:block}
+.richtung-label{font-size:10px;color:var(--o);text-transform:uppercase;letter-spacing:1.5px;
+                text-align:center;margin-bottom:8px}
+.richtung-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.btn-richtung{padding:10px 6px;border:none;border-radius:10px;font-size:16px;font-weight:700;
+              cursor:pointer;background:rgba(255,170,0,.1);color:var(--o);
+              border:2px solid rgba(255,170,0,.2);transition:all .15s;text-align:center;line-height:1.4}
+.btn-richtung span{display:block;font-size:10px;opacity:.8}
+.btn-richtung:active{background:rgba(255,170,0,.3);transform:scale(.95)}
+.btn-richtung.selected{background:rgba(255,170,0,.25);border-color:var(--o);
+                       box-shadow:0 0 12px rgba(255,170,0,.3)}
+
 /* TIMER ANZEIGE */
 .timer-box{display:none;background:rgba(255,61,90,.08);border:1px solid rgba(255,61,90,.2);
            border-radius:12px;padding:10px 14px;margin-bottom:8px;
@@ -217,6 +231,16 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
       <div class="timer-sub" id="timerAmpel">Warte auf Grün…</div>
     </div>
 
+    <!-- RICHTUNGSAUSWAHL (erscheint nach ROT-Tippen) -->
+    <div class="richtung-box" id="richtungBox">
+      <div class="richtung-label">Welche Spur?</div>
+      <div class="richtung-btns">
+        <button class="btn-richtung" onclick="setRichtung('links')">↰<br><span>Links</span></button>
+        <button class="btn-richtung" onclick="setRichtung('geradeaus')">⬆️<br><span>Gerade</span></button>
+        <button class="btn-richtung" onclick="setRichtung('rechts')">↱<br><span>Rechts</span></button>
+      </div>
+    </div>
+
     <div class="melde-btns">
       <button class="btn-rot-main" id="btnRot" onclick="meldeRot()">
         🔴 Ich halte<br><span style="font-size:11px;opacity:.7">Ampel ist rot</span>
@@ -278,6 +302,7 @@ const HYSTERESE = 4;     // erst wechseln wenn Unterschied > 4 km/h
 let rotStartTime = null;
 let aktuelleAmpel = null;
 let timerInterval = null;
+let aktuelleRichtung = 'geradeaus'; // default
 
 // Auto-Grün Erkennung
 let autoGruenTracked = {}; // { ampel_id: true } — verhindert Doppel-Speicherung
@@ -299,6 +324,12 @@ function meldeRot() {
 
   rotStartTime = Date.now();
   aktuelleAmpel = nearest;
+
+  // Richtungsauswahl anzeigen
+  aktuelleRichtung = 'geradeaus';
+  document.getElementById('richtungBox').classList.add('active');
+  document.querySelectorAll('.btn-richtung').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.btn-richtung')[1].classList.add('selected');
 
   document.getElementById('timerBox').classList.add('active');
   document.getElementById('timerAmpel').textContent = nearest.name;
@@ -337,6 +368,7 @@ async function meldeGruen() {
     ampel_name: aktuelleAmpel.name,
     phase:      'rot_dauer',
     rot_dauer:  rotDauer,
+    richtung:   aktuelleRichtung,
     lat, lng,
     tageszeit:  now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds(),
     wochentag:  now.getDay(),
@@ -372,6 +404,46 @@ function resetTimer() {
   document.getElementById('timerVal').textContent = '0s';
   document.getElementById('btnRot').classList.remove('active-state');
   document.getElementById('btnGruen').classList.remove('enabled');
+}
+
+// ═══════════════════════════════════════════
+// AUTO-GRÜN ERKENNUNG
+// ═══════════════════════════════════════════
+async function checkAutoGruen(nearby) {
+  // Nur wenn nicht gerade manuell eine Rotphase läuft
+  if (rotStartTime) return;
+  // Nur wenn wir fahren
+  if (spd < AUTO_GRUEN_MIN_SPD) {
+    // Wenn wir langsamer werden / stehen — Reset der Tracking-Liste
+    // damit beim nächsten Passieren wieder erkannt wird
+    autoGruenTracked = {};
+    return;
+  }
+
+  for (const a of nearby) {
+    if (a.d > AUTO_GRUEN_ABSTAND) continue;
+    if (autoGruenTracked[a.id]) continue;
+
+    // Ampel in Reichweite und wir fahren drüber — Grünphase speichern
+    autoGruenTracked[a.id] = true;
+
+    const now = new Date();
+    await sb.from('ampel_meldungen').insert({
+      ampel_id:   a.id,
+      ampel_name: a.name,
+      phase:      'gruen_auto',
+      rot_dauer:  null,
+      lat, lng,
+      tageszeit:  now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds(),
+      wochentag:  now.getDay(),
+      stunde:     now.getHours(),
+      created_at: now.toISOString()
+    }).catch(e => console.log('AutoGrün Supabase:', e));
+
+    totalMeldungen++;
+    document.getElementById('dataPoints').textContent = totalMeldungen;
+    showToast(`🟢 ${a.name} — Grünphase automatisch erkannt`, 'gruen');
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -602,6 +674,7 @@ function tick(){
   const nearby = db.map(a=>({...a,d:dist(lat,lng,a.lat,a.lng)}))
     .filter(a=>a.d<1500).sort((a,b)=>a.d-b.d).slice(0,8);
 
+  checkAutoGruen(nearby);
   const {v:rec,hit,tot}=bestSpeed(nearby);
   const pct=tot>0?Math.round(hit/tot*100):0;
   const col=pct>=60?'var(--g)':pct>=30?'var(--o)':'var(--r)';
