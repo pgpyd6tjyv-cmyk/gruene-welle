@@ -404,6 +404,91 @@ let autoGruenTracked = {}; // { ampel_id: true } — verhindert Doppel-Speicheru
 const AUTO_GRUEN_ABSTAND = 60;  // Ampel muss näher als 60m sein
 const AUTO_GRUEN_MIN_SPD = 10;  // mind. 10 km/h um als "durchgefahren" zu gelten
 
+// Hamburg Echtzeit-Ampeldaten
+let HH_LIVE = {}; // { iotId: { phase: 'g'|'r'|'o', seit: timestamp } }
+let HH_THINGS = []; // { id, iotId, lat, lng, name }
+let hhLiveAktiv = false;
+let letzterHHLat = null;
+
+// ═══════════════════════════════════════════
+// HAMBURG TLD API — Ampeln laden
+// ═══════════════════════════════════════════
+async function ladeHamburgAmpeln(myLat, myLng) {
+  try {
+    const r = 0.012; // ~1.3km Radius
+    // Things (Ampeln) im Umkreis laden
+    const url = `https://tld.iot.hamburg.de/v1.1/Things?$top=50` +
+      `&$expand=Locations` +
+      `&$filter=properties/serviceName eq 'HH_STA_traffic_lights'`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    const things = (data.value || []).filter(t => {
+      const loc = t.Locations?.[0]?.location?.coordinates;
+      if (!loc) return false;
+      const [lng2, lat2] = loc;
+      return dist(myLat, myLng, lat2, lng2) < 1500;
+    }).map(t => {
+      const [lng2, lat2] = t.Locations[0].location.coordinates;
+      return {
+        id: 70000 + t['@iot.id'],
+        iotId: t['@iot.id'],
+        lat: lat2, lng: lng2,
+        name: t.name || t.description || 'HH-Ampel',
+        z: 60, p: 0, hh: true
+      };
+    });
+
+    if (things.length > 0) {
+      HH_THINGS = things;
+      hhLiveAktiv = true;
+      letzterHHLat = { lat: myLat, lng: myLng };
+      document.getElementById('osmDot').style.background = 'var(--g)';
+      document.getElementById('osmCount').textContent = things.length + ' HH-Live';
+      showToast(`🚦 ${things.length} Hamburg-Echtampeln geladen!`, 'gruen');
+      // Sofort erste Signaldaten laden
+      ladeHamburgSignale();
+    }
+  } catch(e) {
+    console.log('HH-API Fehler:', e);
+    hhLiveAktiv = false;
+  }
+}
+
+// ═══════════════════════════════════════════
+// HAMBURG TLD API — Signalstatus laden
+// ═══════════════════════════════════════════
+async function ladeHamburgSignale() {
+  if (!HH_THINGS.length) return;
+  try {
+    // Für die 8 nächsten Ampeln den Signalstatus laden
+    const db = OSM_DB.length ? OSM_DB : FALLBACK_DB;
+    const nearby = HH_THINGS
+      .map(a => ({...a, d: dist(lat, lng, a.lat, a.lng)}))
+      .sort((a,b) => a.d - b.d)
+      .slice(0, 8);
+
+    await Promise.all(nearby.map(async a => {
+      try {
+        const url = `https://tld.iot.hamburg.de/v1.1/Things(${a.iotId})/Datastreams` +
+          `?$filter=properties/layerName eq 'primary_signal'` +
+          `&$expand=Observations($top=1;$orderby=phenomenonTime desc)`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const obs = data.value?.[0]?.Observations?.[0]?.result;
+        if (obs !== undefined) {
+          // Hamburg Signal: 1=rot, 2=gelb, 3=grün, 4=rotgelb, 8=dunkel
+          const phase = obs === 3 ? 'g' : obs === 2 ? 'o' : 'r';
+          HH_LIVE[a.iotId] = { phase, seit: Date.now() };
+        }
+      } catch(e) {}
+    }));
+  } catch(e) {}
+}
+
+// Hamburg Signale alle 5 Sekunden aktualisieren
+setInterval(() => { if (hhLiveAktiv && lat) ladeHamburgSignale(); }, 5000);
+
 // ═══════════════════════════════════════════
 // ROT MELDEN
 // ═══════════════════════════════════════════
@@ -744,6 +829,18 @@ function onErr() {
 // PHASE BERECHNEN
 // ═══════════════════════════════════════════
 function getPhase(amp) {
+  // Hamburg Echtzeit-Daten haben Vorrang
+  if (amp.hh && HH_LIVE[amp.iotId]) {
+    const live = HH_LIVE[amp.iotId];
+    const alter = Math.round((Date.now() - live.seit) / 1000);
+    return {
+      c: live.phase,
+      rem: Math.max(0, 30 - alter), // grobe Schätzung wie lange noch
+      toGreen: live.phase === 'g' ? 0 : Math.max(0, 30 - alter),
+      community: false,
+      live: true
+    };
+  }
   const cd = communityData[amp.id];
   if (cd && cd.rotDauern.length >= 3) {
     const avgRot = Math.round(cd.rotDauern.reduce((a,b)=>a+b,0)/cd.rotDauern.length);
@@ -808,12 +905,19 @@ function dist(a,b,c,d){
 function tick(){
   T++;
   if(!lat) return;
-  const db = OSM_DB.length ? OSM_DB : FALLBACK_DB;
-  const nearby = db.map(a=>({...a,d:dist(lat,lng,a.lat,a.lng)}))
-    .filter(a=>a.d<1500).sort((a,b)=>a.d-b.d).slice(0,8);
+  // HH-Live + OSM + Fallback zusammenführen
+  const hhNearby = HH_THINGS.map(a=>({...a,d:dist(lat,lng,a.lat,a.lng)})).filter(a=>a.d<1500);
+  const osmNearby = (OSM_DB.length ? OSM_DB : FALLBACK_DB).map(a=>({...a,d:dist(lat,lng,a.lat,a.lng)})).filter(a=>a.d<1500);
+  // HH-Live bevorzugen, OSM nur wenn keine HH-Ampel in 50m
+  const nearby = [...hhNearby];
+  osmNearby.forEach(o => {
+    if (!hhNearby.find(h => dist(h.lat,h.lng,o.lat,o.lng) < 50)) nearby.push(o);
+  });
+  nearby.sort((a,b)=>a.d-b.d);
+  const nearbyTop = nearby.slice(0,8);
 
-  checkAutoGruen(nearby);
-  const {v:rec,hit,tot}=bestSpeed(nearby);
+  checkAutoGruen(nearbyTop);
+  const {v:rec,hit,tot}=bestSpeed(nearbyTop);
   const pct=tot>0?Math.round(hit/tot*100):0;
   const col=pct>=60?'var(--g)':pct>=30?'var(--o)':'var(--r)';
 
@@ -833,7 +937,7 @@ function tick(){
   else if(diff<-5){pill.textContent='▲ Schneller';pill.className='pill up';}
   else{pill.textContent='▼ Langsamer';pill.className='pill dn';}
 
-  const next=nearby.find(a=>a.d>8);
+  const next=nearbyTop.find(a=>a.d>8);
   if(next){
     const ph=getPhase(next);
     document.getElementById('nDist').textContent=Math.round(next.d);
@@ -842,11 +946,11 @@ function tick(){
   }
 
   const list=document.getElementById('ampList');
-  if(!nearby.length){
+  if(!nearbyTop.length){
     list.innerHTML='<div class="loading"><span>Keine Ampeln in 1.5km</span></div>';
     return;
   }
-  list.innerHTML=nearby.map(a=>{
+  list.innerHTML=nearbyTop.map(a=>{
     const ph=getPhase(a);
     const icon=ph.c==='g'?'✓':ph.c==='o'?'!':'✗';
     const tTxt=ph.c==='g'?ph.rem+'s grün':'grün in '+ph.toGreen+'s';
@@ -854,7 +958,8 @@ function tick(){
     const ankunft=rec>0?Math.round(a.d/(rec/3.6)):'?';
     const cd=communityData[a.id];
     const mess=cd?cd.rotDauern.length:0;
-    const src=a.osm?'🗺️':a.neu?'📍':'📋';
+    const src=a.hh?'🚦':a.osm?'🗺️':a.neu?'📍':'📋';
+    const liveTag = a.hh && HH_LIVE[a.iotId] ? ' · ⚡Live' : '';
     const avgRot=mess>=1?Math.round(cd.rotDauern.reduce((x,y)=>x+y,0)/cd.rotDauern.length):null;
     const meta=`${Math.round(a.d)}m · ~${ankunft}s · ${src}${mess>0?` · ⏱️${avgRot}s Ø (${mess}×)`:''}${ph.community?' · ✅':''}`;
     return `<div class="row">
