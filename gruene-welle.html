@@ -420,8 +420,11 @@ let letzterHHLat = null;
 // ═══════════════════════════════════════════
 async function ladeHamburgAmpeln(myLat, myLng) {
   try {
-    // Nur erste 500 laden, dann clientseitig nach Nähe filtern
-    const url = `https://tld.iot.hamburg.de/v1.1/Things?$top=500&$expand=Locations&$skip=0`;
+    const d = 0.015;
+    const bbox = `${myLng-d},${myLat-d},${myLng+d},${myLat+d}`;
+    const url = `https://tld.iot.hamburg.de/v1.1/Things` +
+      `?$top=200&$expand=Locations` +
+      `&$filter=geo.intersects(Locations/location,geography'ENVELOPE(${bbox})')`;
     const data = await hhFetch(url);
     if (!data || !data.value) throw new Error('Keine Daten');
 
