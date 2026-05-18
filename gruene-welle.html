@@ -420,15 +420,27 @@ let letzterHHLat = null;
 // ═══════════════════════════════════════════
 async function ladeHamburgAmpeln(myLat, myLng) {
   try {
-    const d = 0.015;
-    const bbox = `${myLng-d},${myLat-d},${myLng+d},${myLat+d}`;
-    const url = `https://tld.iot.hamburg.de/v1.1/Things` +
-      `?$top=200&$expand=Locations` +
-      `&$filter=geo.intersects(Locations/location,geography'ENVELOPE(${bbox})')`;
-    const data = await hhFetch(url);
-    if (!data || !data.value) throw new Error('Keine Daten');
+    // Mehrere Seiten laden bis wir Ampeln in der Nähe finden
+    let url = `https://tld.iot.hamburg.de/v1.1/Things?$top=100&$expand=Locations`;
+    let alleThings = [];
+    let seiten = 0;
 
-    const things = (data.value || []).filter(t => {
+    while (url && seiten < 15) {
+      const data = await hhFetch(url);
+      if (!data || !data.value) break;
+      alleThings = alleThings.concat(data.value);
+      // Prüfen ob wir schon Ampeln in der Nähe haben
+      const inNaehe = alleThings.filter(t => {
+        const loc = t.Locations?.[0]?.location?.coordinates;
+        if (!loc) return false;
+        return dist(myLat, myLng, loc[1], loc[0]) < 1500;
+      });
+      if (inNaehe.length >= 10) break; // genug gefunden
+      url = data['@iot.nextLink'] || null;
+      seiten++;
+    }
+
+    const things = alleThings.filter(t => {
       const loc = t.Locations?.[0]?.location?.coordinates;
       if (!loc) return false;
       const [lng2, lat2] = loc;
