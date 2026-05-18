@@ -420,16 +420,10 @@ let letzterHHLat = null;
 // ═══════════════════════════════════════════
 async function ladeHamburgAmpeln(myLat, myLng) {
   try {
-    // Ampeln im Umkreis per Geo-Filter laden
-    const delta = 0.012;
-    const minLat = myLat - delta, maxLat = myLat + delta;
-    const minLng = myLng - delta, maxLng = myLng + delta;
-    const poly = `POLYGON((${minLng} ${minLat},${maxLng} ${minLat},${maxLng} ${maxLat},${minLng} ${maxLat},${minLng} ${minLat}))`;
-    const url = `https://tld.iot.hamburg.de/v1.1/Things` +
-      `?$top=100&$expand=Locations` +
-      `&$filter=st_within(Locations/location,geography'${poly}')`;
+    // Nur erste 500 laden, dann clientseitig nach Nähe filtern
+    const url = `https://tld.iot.hamburg.de/v1.1/Things?$top=500&$expand=Locations&$skip=0`;
     const data = await hhFetch(url);
-    if (!data) throw new Error('Keine Daten');
+    if (!data || !data.value) throw new Error('Keine Daten');
 
     const things = (data.value || []).filter(t => {
       const loc = t.Locations?.[0]?.location?.coordinates;
