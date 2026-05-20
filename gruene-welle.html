@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Grüne Welle HH v7</title>
+<title>Grüne Welle HH v9</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -243,16 +243,21 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
 
   <!-- MELDE SECTION -->
   <div class="melde-section">
-    <div class="melde-title">🚦 Ampel melden</div>
+    <div class="melde-title" id="meldeTitle">🚦 Ampel melden</div>
 
-    <!-- TIMER -->
-    <div class="timer-box" id="timerBox">
-      <div class="timer-label">⏱️ Rotphase läuft</div>
-      <div class="timer-val" id="timerVal">0s</div>
-      <div class="timer-sub" id="timerAmpel">Warte auf Grün…</div>
+    <!-- KOMPAKTE ROT/GRÜN BUTTONS + TIMER + RICHTUNG IN EINEM -->
+    <div class="melde-btns">
+      <button class="btn-rot-main" id="btnRot" onclick="meldeRot()">
+        🔴 Ich halte<br>
+        <span id="rotTimerInline" style="font-size:18px;font-weight:700;display:none">0s</span>
+        <span id="rotSubtext" style="font-size:11px;opacity:.7">Ampel ist rot</span>
+      </button>
+      <button class="btn-gruen-main" id="btnGruen" onclick="meldeGruen()">
+        🟢 Ich fahre los<br><span style="font-size:11px;opacity:.7">Ampel ist grün</span>
+      </button>
     </div>
 
-    <!-- RICHTUNGSAUSWAHL (erscheint nach ROT-Tippen) -->
+    <!-- RICHTUNGSAUSWAHL (erscheint nach ROT-Tippen, kompakt) -->
     <div class="richtung-box" id="richtungBox">
       <div class="richtung-label">Welche Spur?</div>
       <div class="richtung-btns">
@@ -260,15 +265,6 @@ html,body{background:var(--bg);color:var(--t);font-family:-apple-system,sans-ser
         <button class="btn-richtung" onclick="setRichtung('geradeaus')">⬆️<br><span>Gerade</span></button>
         <button class="btn-richtung" onclick="setRichtung('rechts')">↱<br><span>Rechts</span></button>
       </div>
-    </div>
-
-    <div class="melde-btns">
-      <button class="btn-rot-main" id="btnRot" onclick="meldeRot()">
-        🔴 Ich halte<br><span style="font-size:11px;opacity:.7">Ampel ist rot</span>
-      </button>
-      <button class="btn-gruen-main" id="btnGruen" onclick="meldeGruen()">
-        🟢 Ich fahre los<br><span style="font-size:11px;opacity:.7">Ampel ist grün</span>
-      </button>
     </div>
 
     <button class="btn-neu" onclick="neueAmpel()">📍 Neue Ampel hier einzeichnen</button>
@@ -519,33 +515,31 @@ function meldeRot() {
   const db = OSM_DB.length ? OSM_DB : FALLBACK_DB;
   const nearest = db.map(a=>({...a,d:dist(lat,lng,a.lat,a.lng)})).sort((a,b)=>a.d-b.d)[0];
 
-  if (!nearest || nearest.d > 100) {
-    showToast('Keine Ampel in 100m Umkreis', 'info'); return;
+  if (!nearest || nearest.d > 200) {
+    showToast('Keine Ampel in 200m Umkreis', 'info'); return;
   }
 
   rotStartTime = Date.now();
   aktuelleAmpel = nearest;
 
-  // Richtungsauswahl anzeigen
-  aktuelleRichtung = 'geradeaus';
   document.getElementById('richtungBox').classList.add('active');
   document.querySelectorAll('.btn-richtung').forEach(b => b.classList.remove('selected'));
   document.querySelectorAll('.btn-richtung')[1].classList.add('selected');
-
-  document.getElementById('timerBox').classList.add('active');
-  document.getElementById('timerAmpel').textContent = nearest.name;
   document.getElementById('btnRot').classList.add('active-state');
   document.getElementById('btnGruen').classList.add('enabled');
+  document.getElementById('rotTimerInline').style.display = 'block';
+  document.getElementById('rotSubtext').style.display = 'none';
   document.getElementById('meldeFeedback').textContent = '⏱️ Messe Rotphase von: ' + nearest.name;
 
   clearInterval(timerInterval);
   timerInterval = setInterval(() => {
     const sek = Math.round((Date.now() - rotStartTime) / 1000);
-    document.getElementById('timerVal').textContent = sek + 's';
+    document.getElementById('rotTimerInline').textContent = sek + 's';
   }, 500);
 
   showToast('🔴 Rotphase startet — tippe GRÜN wenn du losfährst', 'rot');
 }
+
 
 // ═══════════════════════════════════════════
 // GRÜN MELDEN
@@ -602,12 +596,12 @@ function resetTimer() {
   aktuelleAmpel = null;
   aktuelleRichtung = 'geradeaus';
   clearInterval(timerInterval);
-  document.getElementById('timerBox').classList.remove('active');
   document.getElementById('richtungBox').classList.remove('active');
-  document.getElementById('timerVal').textContent = '0s';
-  document.getElementById('timerAmpel').textContent = 'Warte auf Grün…';
   document.getElementById('btnRot').classList.remove('active-state');
   document.getElementById('btnGruen').classList.remove('enabled');
+  document.getElementById('rotTimerInline').style.display = 'none';
+  document.getElementById('rotTimerInline').textContent = '0s';
+  document.getElementById('rotSubtext').style.display = 'block';
   document.getElementById('meldeFeedback').textContent = 'Tippe ROT wenn du an einer roten Ampel hältst';
   document.querySelectorAll('.btn-richtung').forEach(b => b.classList.remove('selected'));
 }
