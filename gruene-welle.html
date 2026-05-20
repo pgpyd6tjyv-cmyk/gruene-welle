@@ -605,8 +605,11 @@ function resetTimer() {
   document.getElementById('timerBox').classList.remove('active');
   document.getElementById('richtungBox').classList.remove('active');
   document.getElementById('timerVal').textContent = '0s';
+  document.getElementById('timerAmpel').textContent = 'Warte auf Grün…';
   document.getElementById('btnRot').classList.remove('active-state');
   document.getElementById('btnGruen').classList.remove('enabled');
+  document.getElementById('meldeFeedback').textContent = 'Tippe ROT wenn du an einer roten Ampel hältst';
+  document.querySelectorAll('.btn-richtung').forEach(b => b.classList.remove('selected'));
 }
 
 function setRichtung(r) {
@@ -1002,7 +1005,7 @@ async function zeigeStats() {
   show('s2');
 
   const heute = new Date();
-  const heuteStr = heute.toISOString().split('T')[0];
+  const heuteStr = `${heute.getFullYear()}-${String(heute.getMonth()+1).padStart(2,'0')}-${String(heute.getDate()).padStart(2,'0')}`;
 
   // Alle Meldungen laden
   const { data: alle } = await sb
