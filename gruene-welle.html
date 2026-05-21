@@ -560,15 +560,19 @@ async function meldeGruen() {
   if (rotDauer < 5) { showToast('Zu kurz — mindestens 5 Sekunden', 'info'); return; }
   if (rotDauer > 180) { showToast('Zu lang — war das wirklich eine Ampel?', 'info'); resetTimer(); return; }
 
-  clearInterval(timerInterval);
+  // UI sofort zurücksetzen — nicht auf Supabase warten
+  const gespeicherteAmpel = aktuelleAmpel;
+  const gespeicherteRichtung = aktuelleRichtung;
+  resetTimer();
+  showToast(`✅ ${gespeicherteAmpel.name}: ${rotDauer}s gespeichert!`, 'gruen');
 
   const now = new Date();
   await sb.from('ampel_meldungen').insert({
-    ampel_id:   aktuelleAmpel.id,
-    ampel_name: aktuelleAmpel.name,
+    ampel_id:   gespeicherteAmpel.id,
+    ampel_name: gespeicherteAmpel.name,
     phase:      'rot_dauer',
     rot_dauer:  rotDauer,
-    richtung:   aktuelleRichtung,
+    richtung:   gespeicherteRichtung,
     lat, lng,
     tageszeit:  now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds(),
     wochentag:  now.getDay(),
@@ -576,24 +580,21 @@ async function meldeGruen() {
     created_at: now.toISOString()
   }).catch(e => console.log('Supabase:', e));
 
-  if (!communityData[aktuelleAmpel.id]) communityData[aktuelleAmpel.id] = {rotDauern:[], gruenDauern:[]};
-  communityData[aktuelleAmpel.id].rotDauern.push(rotDauer);
+  if (!communityData[gespeicherteAmpel.id]) communityData[gespeicherteAmpel.id] = {rotDauern:[], gruenDauern:[]};
+  communityData[gespeicherteAmpel.id].rotDauern.push(rotDauer);
   totalMeldungen++;
   document.getElementById('dataPoints').textContent = totalMeldungen;
 
-  const cd = communityData[aktuelleAmpel.id];
+  const cd = communityData[gespeicherteAmpel.id];
   if (cd.rotDauern.length >= 3) {
     const avgRot = Math.round(cd.rotDauern.reduce((a,b)=>a+b,0) / cd.rotDauern.length);
     const zyklus = Math.round(avgRot / 0.4);
-    const idx = (OSM_DB.length ? OSM_DB : FALLBACK_DB).findIndex(a=>a.id===aktuelleAmpel.id);
+    const idx = (OSM_DB.length ? OSM_DB : FALLBACK_DB).findIndex(a=>a.id===gespeicherteAmpel.id);
     if (idx>=0) (OSM_DB.length ? OSM_DB : FALLBACK_DB)[idx].z = Math.max(30, Math.min(120, zyklus));
   }
 
-  showToast(`✅ ${aktuelleAmpel.name}: ${rotDauer}s Rotphase gespeichert!`, 'gruen');
   document.getElementById('meldeFeedback').textContent =
-    `✓ ${aktuelleAmpel.name} — ${rotDauer}s Rot gelernt (${(communityData[aktuelleAmpel.id]?.rotDauern?.length||1)}. Messung)`;
-
-  resetTimer();
+    `✓ ${gespeicherteAmpel.name} — ${rotDauer}s Rot gelernt (${(communityData[gespeicherteAmpel.id]?.rotDauern?.length||1)}. Messung)`;
 }
 
 function resetTimer() {
